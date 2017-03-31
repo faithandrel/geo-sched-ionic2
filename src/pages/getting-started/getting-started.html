@@ -1,0 +1,36 @@
+
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Page One</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding class="getting-started">
+
+  <h3>Getting Started</h3>
+  <p>
+    myResponse: {{ myResponse }}
+  </p>
+  
+  <p>
+    myError: {{ myError }}
+  </p>
+  
+  <ion-item>
+    <ion-label stacked>Message</ion-label>
+    <ion-textarea [(ngModel)]="myItem.content" rows="4" ></ion-textarea>
+  </ion-item>
+  
+  <p>
+    <button ion-button secondary (click)="saveThisItem()" >Submit</button>
+  </p>
+  
+  <p>
+    <button ion-button secondary (click)="toastTest()" >Test</button>
+  </p>
+
+</ion-content>

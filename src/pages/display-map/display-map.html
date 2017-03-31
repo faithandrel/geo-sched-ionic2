@@ -1,0 +1,35 @@
+
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Display Map</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="getting-started">
+
+  <h3>Display Map</h3>
+  <p>
+    Lat: {{ myLat }}
+  </p>
+  <p>
+    Long: {{ myLong }}
+  </p>
+   <p>
+    myPosition: {{ myPosition }}
+  </p>
+  <p>
+    myError: {{ myError }}
+  </p>
+  
+  <p>
+    <button primary (click)="getMap()" >Open Map</button>
+  </p>
+  
+  <div id="sch-google-map">
+    
+  </div>
+  
+</ion-content>
