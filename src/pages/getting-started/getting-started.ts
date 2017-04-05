@@ -10,7 +10,7 @@ import {SchdLocation} from '../../services/schd-location';
 export class GettingStartedPage implements OnInit {
   
   myItem: any;
-  myToken: string;
+  myToken: any;
   myError: any;
   myResponse: any;
   myNav: any;
@@ -44,6 +44,8 @@ export class GettingStartedPage implements OnInit {
       latitude: 0,
       longitude: 0
     };
+
+    this.myToken = this.backEndService.getExpiryDate();
     
     //this.schdLocation.toastGeo(this.myNav);
   }

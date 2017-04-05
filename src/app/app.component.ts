@@ -18,7 +18,7 @@ import { SchdErrorHandler } from '../services/schd-error-handler';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
  
-  rootPage: any = LogInPage;
+  rootPage: any;
   pages: Array<{title: string, component: any}>
 
   constructor(private platform: Platform,
@@ -34,6 +34,7 @@ export class MyApp {
       { title: 'Map', component: DisplayMapPage }
     ];
 
+    this.rootPage = LogInPage;
   }
 
   initializeApp() {

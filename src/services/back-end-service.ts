@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Headers, Http, Response, Request, RequestOptions, RequestMethod } from '@angular/http';
-import { AuthHttp, AuthConfig, tokenNotExpired } from 'angular2-jwt';
+import { AuthHttp, AuthConfig, tokenNotExpired, JwtHelper } from 'angular2-jwt';
 import 'rxjs/add/operator/toPromise';
 import { AlertController } from 'ionic-angular';
 
 
 @Injectable()
 export class BackEndService {
-  private backEndUrl = 'http://6b5fa88c.ngrok.io/';  // URL to web api
+  private backEndUrl = 'http://f5eb37f5.ngrok.io/';  // URL to web api
   backEndToken: string;
   private signupSession: string;
   theResponse: any;
   local: Storage;
-  public jwtToken: any;
+  jwtToken: any;
+  jwtHelper: JwtHelper = new JwtHelper();
   
   constructor(private http: Http, private storage: Storage, public alertCtrl: AlertController) {
     storage.ready().then(() => {
@@ -129,6 +130,10 @@ export class BackEndService {
   
   getJwtToken() {
     return this.jwtToken;
+  }
+
+  getExpiryDate() {
+    return this.jwtHelper.getTokenExpirationDate(this.jwtToken)
   }
   
   authSuccess(token) {

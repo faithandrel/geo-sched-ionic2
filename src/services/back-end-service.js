@@ -8,23 +8,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Injectable } from '@angular/core';
-import { SecureStorage } from '@ionic-native/secure-storage';
+import { Storage } from '@ionic/storage';
 import { Headers, Http, Request, RequestOptions, RequestMethod } from '@angular/http';
 import { tokenNotExpired } from 'angular2-jwt';
 import 'rxjs/add/operator/toPromise';
+import { AlertController } from 'ionic-angular';
 var BackEndService = (function () {
-    function BackEndService(http, secureStorage) {
+    function BackEndService(http, storage, alertCtrl) {
         var _this = this;
         this.http = http;
-        this.secureStorage = secureStorage;
-        this.backEndUrl = 'http://f58caf1b.ngrok.io/'; // URL to web api
-        this.getBackEndToken()
-            .then(function (res) {
-            _this.secureStorage.create('my_store_name')
-                .then(function (storage) {
-                _this.local = storage;
-                _this.getSavedJwt();
-            });
+        this.storage = storage;
+        this.alertCtrl = alertCtrl;
+        this.backEndUrl = 'http://171f9bc4.ngrok.io/'; // URL to web api
+        storage.ready().then(function () {
+            _this.local = storage;
+            return _this.getSavedJwt();
         })
             .catch(this.handleError);
     }
@@ -116,7 +114,7 @@ var BackEndService = (function () {
     };
     BackEndService.prototype.getSavedJwt = function () {
         var _this = this;
-        this.local.get('id_token').then(function (profile) {
+        return this.local.get('id_token').then(function (profile) {
             _this.jwtToken = profile;
         });
     };
@@ -124,12 +122,10 @@ var BackEndService = (function () {
         return this.jwtToken;
     };
     BackEndService.prototype.authSuccess = function (token) {
-        //this.local.set('id_token', token);
-        this.local.set('id_token', token).then(function (profile) {
-        });
+        this.local.set('id_token', token);
     };
     BackEndService.prototype.isLoggedIn = function () {
-        return tokenNotExpired();
+        return tokenNotExpired('id_token', this.jwtToken);
     };
     BackEndService.prototype.loginTheUser = function (userObject) {
         var _this = this;
@@ -165,7 +161,7 @@ var BackEndService = (function () {
 }());
 BackEndService = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [Http, SecureStorage])
+    __metadata("design:paramtypes", [Http, Storage, AlertController])
 ], BackEndService);
 export { BackEndService };
 //# sourceMappingURL=back-end-service.js.map

@@ -14,7 +14,7 @@ import { DisplayMapPage } from '../pages/display-map/display-map';
 import { BackEndService } from '../services/back-end-service';
 import { SchdErrorHandler } from '../services/schd-error-handler';
 import { SchdLocation } from '../services/schd-location';
-import { SecureStorage } from '@ionic-native/secure-storage';
+import { IonicStorageModule } from '@ionic/storage';
 var AppModule = (function () {
     function AppModule() {
     }
@@ -30,7 +30,8 @@ AppModule = __decorate([
             DisplayMapPage
         ],
         imports: [
-            IonicModule.forRoot(MyApp)
+            IonicModule.forRoot(MyApp),
+            IonicStorageModule.forRoot()
         ],
         bootstrap: [IonicApp],
         entryComponents: [
@@ -43,8 +44,7 @@ AppModule = __decorate([
         providers: [{ provide: ErrorHandler, useClass: IonicErrorHandler },
             { provide: BackEndService, useClass: BackEndService },
             { provide: SchdErrorHandler, useClass: SchdErrorHandler },
-            { provide: SchdLocation, useClass: SchdLocation },
-            { provide: SecureStorage, useClass: SecureStorage }]
+            { provide: SchdLocation, useClass: SchdLocation }]
     })
 ], AppModule);
 export { AppModule };

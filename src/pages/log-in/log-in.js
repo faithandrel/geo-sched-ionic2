@@ -13,12 +13,16 @@ import { GettingStartedPage } from '../../pages/getting-started/getting-started'
 import { BackEndService } from '../../services/back-end-service';
 import { SchdErrorHandler } from '../../services/schd-error-handler';
 import { SchdLocation } from '../../services/schd-location';
+import { AlertController } from 'ionic-angular';
+import { JwtHelper } from 'angular2-jwt';
 var LogInPage = (function () {
-    function LogInPage(backEndService, schdErrorHandler, schdLocation, thisNav) {
+    function LogInPage(backEndService, schdErrorHandler, schdLocation, thisNav, alertCtrl) {
         this.backEndService = backEndService;
         this.schdErrorHandler = schdErrorHandler;
         this.schdLocation = schdLocation;
         this.thisNav = thisNav;
+        this.alertCtrl = alertCtrl;
+        this.jwtHelper = new JwtHelper();
         this.myNav = thisNav;
     }
     LogInPage.prototype.loginThisUser = function () {
@@ -26,6 +30,7 @@ var LogInPage = (function () {
         this.backEndService
             .loginTheUser(this.loginUser)
             .then(function (res) {
+            //console.log(this.backEndService.jwtToken);
             _this.myNav.setRoot(GettingStartedPage);
         })
             .catch(function (error) {
@@ -46,12 +51,22 @@ var LogInPage = (function () {
         };
         this.backEndService
             .getBackEndToken()
+            .then(function (res) {
+            _this.myResponse = res;
+            return _this.backEndService.getSavedJwt();
+        })
+            .then(function (res) {
+            _this.myToken = _this.backEndService.jwtToken;
+            if (_this.backEndService.isLoggedIn()) {
+                _this.myNav.setRoot(GettingStartedPage);
+            }
+        })
             .catch(function (error) {
             _this.schdErrorHandler.showSchdError(error);
         });
         this.schdErrorHandler.checkWeb();
         this.schdLocation.checkGeo();
-        //this.schdLocation.monitorGeo(this.myNav);
+        this.schdLocation.monitorGeo();
     };
     return LogInPage;
 }());
@@ -62,7 +77,8 @@ LogInPage = __decorate([
     __metadata("design:paramtypes", [BackEndService,
         SchdErrorHandler,
         SchdLocation,
-        Nav])
+        Nav,
+        AlertController])
 ], LogInPage);
 export { LogInPage };
 //# sourceMappingURL=log-in.js.map

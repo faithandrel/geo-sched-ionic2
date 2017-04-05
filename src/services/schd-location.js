@@ -29,10 +29,7 @@ var SchdLocation = (function () {
                 message: 'Geo ' + JSON.stringify(position),
                 duration: 3000,
             });
-            _this.myLocation = {
-                longitude: position.coords.longitude,
-                latitude: position.coords.latitude
-            };
+            _this.myLocation = {};
             toast.present();
         });
     };
@@ -43,10 +40,7 @@ var SchdLocation = (function () {
                 message: 'Geo ' + JSON.stringify(position),
                 duration: 3000,
             });
-            _this.myLocation = {
-                longitude: position.coords.longitude,
-                latitude: position.coords.latitude
-            };
+            _this.myLocation = {};
         });
     };
     SchdLocation.prototype.getGeo = function () {

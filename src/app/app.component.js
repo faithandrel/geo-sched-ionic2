@@ -7,8 +7,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { Nav, Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 import { LogInPage } from '../pages/log-in/log-in';
 import { ListPage } from '../pages/list/list';
@@ -25,9 +25,6 @@ var MyApp = (function () {
         this.schdLocation = schdLocation;
         this.rootPage = LogInPage;
         this.initializeApp();
-        if (backEndService.isLoggedIn()) {
-            this.rootPage = GettingStartedPage;
-        }
         // used for an example of ngFor and navigation
         this.pages = [
             { title: 'Getting Started', component: GettingStartedPage },
@@ -44,13 +41,17 @@ var MyApp = (function () {
             StatusBar.styleDefault();
         });
     };
-    MyApp.prototype.openPage = function (navCtrl, page) {
+    MyApp.prototype.openPage = function (page) {
         // Reset the content nav to have just this page
         // we wouldn't want the back button to show in this scenario
-        navCtrl.push(page);
+        this.nav.setRoot(page.component);
     };
     return MyApp;
 }());
+__decorate([
+    ViewChild(Nav),
+    __metadata("design:type", Nav)
+], MyApp.prototype, "nav", void 0);
 MyApp = __decorate([
     Component({
         templateUrl: 'app.html'
