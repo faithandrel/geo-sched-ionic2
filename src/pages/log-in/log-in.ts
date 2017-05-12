@@ -1,6 +1,7 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 
-import {GettingStartedPage} from '../../pages/getting-started/getting-started';
+import {GettingStartedPage} from '../getting-started/getting-started';
+import { TabsPage } from '../tabs/tabs';
 
 import {BackEndService} from '../../services/back-end-service';
 import {SchdErrorHandler} from '../../services/schd-error-handler';
@@ -37,7 +38,7 @@ export class LogInPage implements OnInit {
         .loginTheUser(this.loginUser)
         .then(res => {
             //console.log(this.backEndService.jwtToken);
-            this.navCtrl.setRoot(GettingStartedPage);
+            this.navCtrl.setRoot(TabsPage);
           })
         .catch(error => {
             this.schdErrorHandler.showSchdError(error);
@@ -87,7 +88,7 @@ export class LogInPage implements OnInit {
              alert.present();*/
             this.myToken = this.backEndService.getExpiryDate();
             if(this.backEndService.isLoggedIn()) {
-              this.navCtrl.setRoot(GettingStartedPage);
+              this.navCtrl.setRoot(TabsPage);
               //this.loading = false;
               return Promise.resolve();
             } 

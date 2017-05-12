@@ -8,7 +8,7 @@ import { AlertController } from 'ionic-angular';
 
 @Injectable()
 export class BackEndService {
-  private backEndUrl = 'http://f5eb37f5.ngrok.io/';  // URL to web api
+  private backEndUrl = 'http://fa0af489.ngrok.io/';  // URL to web api
   backEndToken: string;
   private signupSession: string;
   theResponse: any;
@@ -96,7 +96,7 @@ export class BackEndService {
     
     return this.http.request(req)
           .toPromise()
-          .then(res => JSON.stringify(res.json()))
+          .then(res => res.json())
           .catch(this.handleError);
   }
   
