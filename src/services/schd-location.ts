@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ToastController, AlertController } from 'ionic-angular';
 import { Geolocation, Diagnostic } from 'ionic-native';
-import {Observable} from 'rxjs/Observable';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx';
 
 @Injectable()

@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Sign Up</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding >
+  <div>
+    <p>
+      myResponse: {{ myResponse }}
+    </p>
+    
+    <div *ngIf="!emailSignup" class="facebook-sign-up">
+      <ion-list>
+        <ion-item>
+          <ion-input [(ngModel)]="signUpUser.username" type="text" placeholder="username"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <p>
+        <button ion-button (click)="facebookSignUp()" >
+          <ion-icon name="logo-facebook"></ion-icon>  Sign Up with Facebook
+        </button>
+      </p>
+
+      <p>
+        <button ion-button (click)="openEmailSection()" >Sign Up with Email</button>
+      </p>
+    </div>
+
+    <div  *ngIf="emailSignup" class="email-sign-up">
+      <ion-list>
+        <ion-item>
+          <ion-input [(ngModel)]="signUpUser.username" type="text" placeholder="username"></ion-input>
+        </ion-item>
+        
+        <ion-item>
+          <ion-input [(ngModel)]="signUpUser.password" type="password" placeholder="password"></ion-input>
+        </ion-item>
+        
+        <ion-item>
+          <ion-input [(ngModel)]="signUpUser.email" type="text" placeholder="email"></ion-input>
+        </ion-item>
+      </ion-list>
+
+      <p>
+        <button ion-button (click)="signUpWithEmail()" >Sign Up</button>
+      </p>
+      <p>
+        <button ion-button (click)="closeEmailSection()" ><ion-icon name="logo-facebook"></ion-icon></button>
+      </p>
+
+    </div>
+  </div>
+</ion-content>

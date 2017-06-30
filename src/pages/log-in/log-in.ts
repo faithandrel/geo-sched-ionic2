@@ -1,11 +1,13 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 
-import {GettingStartedPage} from '../getting-started/getting-started';
+import { GettingStartedPage } from '../getting-started/getting-started';
 import { TabsPage } from '../tabs/tabs';
+import { SignUpPage } from '../sign-up/sign-up';
 
-import {BackEndService} from '../../services/back-end-service';
-import {SchdErrorHandler} from '../../services/schd-error-handler';
-import {SchdLocation} from '../../services/schd-location';
+import { BackEndService } from '../../services/back-end-service';
+import { SchdErrorHandler } from '../../services/schd-error-handler';
+import { SchdLocation } from '../../services/schd-location';
+import { SchdFacebook } from '../../services/schd-facebook';
 
 import { NavController, AlertController } from 'ionic-angular';
 
@@ -25,17 +27,15 @@ export class LogInPage implements OnInit {
   constructor(private backEndService: BackEndService,
               private schdErrorHandler: SchdErrorHandler,
               private schdLocation: SchdLocation,
+              private schdFacebook: SchdFacebook,
               private navCtrl: NavController,
-              public alertCtrl: AlertController) {
-    //this.myNav = thisNav;
-
-    
+              public alertCtrl: AlertController) {    
   }
   
   
-  loginThisUser() {
+  loginWithPassword() {
     this.backEndService
-        .loginTheUser(this.loginUser)
+        .loginWithPassword(this.loginUser)
         .then(res => {
             //console.log(this.backEndService.jwtToken);
             this.navCtrl.setRoot(TabsPage);
@@ -45,9 +45,26 @@ export class LogInPage implements OnInit {
         });
 
   }
+
+  loginWithFacebook() {
+     this.schdFacebook.loginWithFacebook()
+        .then(res => {  
+          if(res.status == 'connected') {
+            this.loginUser.facebook = res.authResponse.userID
+          }
+          return this.backEndService.loginWithFacebook(this.loginUser);
+        })          
+        .then(res => {  
+            this.navCtrl.setRoot(TabsPage);
+            console.log(res);
+        })
+        .catch(error => {
+            this.schdErrorHandler.showSchdError(error);
+        })
+  }
   
-  openFacebook() {
-    this.backEndService.facebookSignUp(this.loginUser.username, this.loginUser.password);
+  signUp() {
+    this.navCtrl.push(SignUpPage);
   }
   
   toastTest() {

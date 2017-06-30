@@ -1,8 +1,8 @@
-import {Component, OnInit} from "@angular/core";
-import {Nav} from 'ionic-angular';
+import { Component, OnInit } from "@angular/core";
+import { Nav } from 'ionic-angular';
 
-import {BackEndService} from '../../services/back-end-service';
-import {SchdLocation} from '../../services/schd-location';
+import { BackEndService } from '../../services/back-end-service';
+import { SchdLocation } from '../../services/schd-location';
 
 @Component({
   templateUrl: 'getting-started.html'

@@ -8,7 +8,7 @@ import { AlertController } from 'ionic-angular';
 
 @Injectable()
 export class BackEndService {
-  private backEndUrl = 'http://fa0af489.ngrok.io/';  // URL to web api
+  private backEndUrl = 'http://e5acb0e5.ngrok.io/';  // URL to web api
   backEndToken: string;
   private signupSession: string;
   theResponse: any;
@@ -16,7 +16,9 @@ export class BackEndService {
   jwtToken: any;
   jwtHelper: JwtHelper = new JwtHelper();
   
-  constructor(private http: Http, private storage: Storage, public alertCtrl: AlertController) {
+  constructor(private http: Http, 
+              private storage: Storage, 
+              public alertCtrl: AlertController) {
     storage.ready().then(() => {
        this.local = storage;
        return this.getSavedJwt();
@@ -57,7 +59,7 @@ export class BackEndService {
           .catch(this.handleError);
   }
   
-  facebookSignUp(username: string, password: string) {
+  facebookSignUpDepcrecated(username: string, password: string) {
     let body = "username=" + username + "&password=" + password + "&_token=" + this.backEndToken;
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
@@ -75,6 +77,32 @@ export class BackEndService {
           .then(res => {
             this.signupSession = res.json();
             open(this.backEndUrl+'sign-up-facebook?signup='+this.signupSession);
+          })
+          .catch(this.handleError);
+    
+  }
+
+  facebookSignUp(newUser) {
+    let body = "username=" + newUser.username + 
+              "&facebook=" + newUser.facebook + 
+              "&access=" + newUser.fbToken + 
+              "&_token=" + this.backEndToken;
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+    var options = new RequestOptions({
+      method: RequestMethod.Post,
+      url: this.backEndUrl+'fb-sign-up',
+      headers: myHeaders,
+      body: body,
+    });
+    var req = new Request(options);
+    
+    console.log(myHeaders);
+    return this.http.request(req)
+          .toPromise()
+          .then(res => {
+            console.log(res);
+            //open(this.backEndUrl+'sign-up-facebook?signup='+this.signupSession);
           })
           .catch(this.handleError);
     
@@ -144,13 +172,15 @@ export class BackEndService {
     return tokenNotExpired('id_token', this.jwtToken);
   }
   
-  loginTheUser(userObject) {
-    let body = "username=" + userObject.username + "&password=" + userObject.password + "&_token=" + this.backEndToken;
+  loginWithPassword(userObject) {
+    let body = "username=" + userObject.username + 
+               "&password=" + userObject.password + 
+               "&_token=" + this.backEndToken;
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
     var options = new RequestOptions({
       method: RequestMethod.Post,
-      url: this.backEndUrl+'test-auth',
+      url: this.backEndUrl+'password-log-in',
       headers: myHeaders,
       body: body,
     });
@@ -173,6 +203,36 @@ export class BackEndService {
           .catch(this.handleError);
   }
   
+  loginWithFacebook(userObject) {
+    let body = "username=" + userObject.username + 
+               "&facebook=" + userObject.facebook + 
+               "&_token=" + this.backEndToken;
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+    var options = new RequestOptions({
+      method: RequestMethod.Post,
+      url: this.backEndUrl+'facebook-log-in',
+      headers: myHeaders,
+      body: body,
+    });
+    
+    var req = new Request(options);
+    
+    return this.http.request(req)
+          .toPromise()
+          .then(res => {
+            let data = res.json();
+            if (data.token != undefined ) {
+              this.authSuccess(data.token);
+              this.jwtToken = data.token;
+              return true;
+            }
+            else {
+              return false;
+            }
+          })
+          .catch(this.handleError);
+  }
 
   private handleError(error: any) {
     return Promise.reject(error.message || error);

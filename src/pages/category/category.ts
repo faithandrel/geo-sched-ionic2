@@ -18,6 +18,7 @@ export class CategoryPage {
 
   category: string;  
   items: any;
+  myTest: any;
 
   constructor(public navCtrl: NavController, 
               public modalCtrl: ModalController,
@@ -42,7 +43,10 @@ export class CategoryPage {
   refreshPage() {
     this.backEndService
         .getItems()
-        .then(res => this.items = res)
+        .then(res => {
+          this.items = res;
+          this.myTest = JSON.stringify(this.items);
+        })
         .catch(error => {
             this.schdErrorHandler.showSchdError(error);
         });
