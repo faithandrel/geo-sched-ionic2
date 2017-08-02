@@ -43,7 +43,28 @@ export class SchdLocation {
     });
   }
   
-  getGeo() {
+  getGeo(): Promise<any> {
+    return Geolocation.getCurrentPosition().then((res) => {
+      return { 
+                latitude: res.coords.latitude,
+                longitude: res.coords.longitude
+              };
+    }).catch((error) => {
+      return error;
+    });
+  }
+
+  checkGeo(): Promise<any> {
+     return Diagnostic.isLocationEnabled().then(res => {
+      if (!res) {
+        return Promise.reject('Please turn on your GPS.');
+      }
+      return Promise.resolve(res);
+    })
+    .catch(e => {return Promise.reject(e)});
+  }
+
+  getGeoDeprecated(): Promise<any> {
     if (this.myLocation != false) {
       return Promise.resolve(this.myLocation);
     }
@@ -61,7 +82,7 @@ export class SchdLocation {
           });*/
   }
   
-  checkGeo() {
+  checkGeoDeprecated() {
     let locInterval = Observable.interval(10000);
     let previousStatus = this.locationStatus;
     
@@ -76,7 +97,7 @@ export class SchdLocation {
               
               toast.present(toast);
             }
-            return this.getGeo();
+            //return this.getGeo();
         }).then(res => {
         },
         err => {
