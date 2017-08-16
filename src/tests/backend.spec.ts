@@ -1,63 +1,79 @@
-import { TestBed, ComponentFixture, async } from '@angular/core/testing';
-import { IonicModule } from 'ionic-angular';
-import { MyApp } from '../app/app.component';
-import { LogInPage } from '../pages/log-in/log-in';
+import { TestBed, inject, async } from '@angular/core/testing';
+import { Http, HttpModule, BaseRequestOptions, Response, ResponseOptions } from '@angular/http';
+import { MockBackend } from '@angular/http/testing';
+import { SchdStorageMock } from '../mocks';
 
-import {BackEndService} from '../services/back-end-service';
-import {SchdErrorHandler} from '../services/schd-error-handler';
-import {SchdLocation} from '../services/schd-location';
-import {IonicStorageModule} from '@ionic/storage';
-
-import { Storage } from '@ionic/storage';
-import { Http } from '@angular/http';
-import { AlertController } from 'ionic-angular';
- 
-let comp: MyApp;
-let fixture: ComponentFixture<MyApp>;
-
-let backend: any;
+import { BackEndService } from '../services/back-end-service';
+import { SchdStorage } from '../services/schd-storage';
  
 describe('Service: Backend', () => {
  
-    /*beforeEach(async(() => {
+    beforeEach(async(() => {
  
         TestBed.configureTestingModule({
  
-            declarations: [MyApp],
+            declarations: [
  
-            providers: 
-            [ {provide: BackEndService, useClass: BackEndService},
-              {provide: SchdErrorHandler, useClass: SchdErrorHandler},
-              {provide: SchdLocation, useClass: SchdLocation} ],
+            ],
+ 
+            providers: [
+                BackEndService,
+                { 
+                    provide: SchdStorage, 
+                    useClass: SchdStorageMock
+                },
+                MockBackend,
+                BaseRequestOptions,
+                {
+                    provide: Http, 
+                    useFactory: (mockBackend, options) => {
+                        return new Http(mockBackend, options);
+                    },
+                    deps: [MockBackend, BaseRequestOptions]
+                }
+            ],
  
             imports: [
-                IonicModule.forRoot(MyApp),
-                IonicStorageModule.forRoot()
+                HttpModule
             ]
  
         }).compileComponents();
  
-    }));*/
+    }));
  
     beforeEach(() => {
+ 
+    });
+ 
+   it('can save and get jwt token', inject([BackEndService], (backendService) => {
+        let tokenTest = 'abxdf';
 
-    	//backend = new BackEndService(new Http(), new Storage(), new AlertController() )
+        backendService.authSuccess(tokenTest);
+        
+        backendService.getSavedJwt().then(res => {
+           expect(backendService.jwtToken == tokenTest).toBeTruthy();
+        
+        });
+      
+    }));
+
+    it('can get backend token', inject([BackEndService, MockBackend], (backendService, mockBackend) => {
  
-        /*fixture = TestBed.createComponent(MyApp);
-        comp    = fixture.componentInstance;*/
+        let tokenTest = 'fghsdfh';
  
-    });
+        mockBackend.connections.subscribe((connection) => {
  
-    /*afterEach(() => {
-        fixture.destroy();
-        comp = null;
-    });*/
+            connection.mockRespond(new Response(new ResponseOptions({
+                body: tokenTest
+            })));
  
-    it('JWT token is stored', () => {
+        });
+  
+        backendService.getBackEndToken().then(res => {
+           expect(res == tokenTest).toBeTruthy();
+           
+        });
  
-        /*expect(fixture).toBeTruthy();
-        expect(comp).toBeTruthy();*/
- 
-    });
+    }));
  
 });

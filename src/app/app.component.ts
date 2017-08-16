@@ -21,10 +21,10 @@ export class MyApp {
   rootPage: any;
   pages: Array<{title: string, component: any}>
 
-  constructor(private platform: Platform,
-              private backEndService: BackEndService,
+  constructor(private platform: Platform
+              /*private backEndService: BackEndService,
               private schdErrorHandler: SchdErrorHandler,
-              private schdLocation: SchdLocation) {
+              private schdLocation: SchdLocation*/) {
     this.initializeApp();
     
     // used for an example of ngFor and navigation

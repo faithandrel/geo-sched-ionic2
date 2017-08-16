@@ -20,6 +20,7 @@ import { BackEndService } from '../services/back-end-service';
 import { SchdErrorHandler } from '../services/schd-error-handler';
 import { SchdLocation } from '../services/schd-location';
 import { SchdFacebook } from '../services/schd-facebook';
+import { SchdStorage } from '../services/schd-storage';
 
 import { AddArticleComponent } from './../components/add-article/add-article';
 import { ArticleComponent } from './../components/article/article';
@@ -67,6 +68,7 @@ import { ArticleComponent } from './../components/article/article';
               {provide: SchdErrorHandler, useClass: SchdErrorHandler},
               {provide: SchdLocation, useClass: SchdLocation},
               {provide: Facebook, useClass: Facebook},
-              {provide: SchdFacebook, useClass: SchdFacebook}]
+              {provide: SchdFacebook, useClass: SchdFacebook},
+              {provide: SchdStorage, useClass: SchdStorage}]
 })
 export class AppModule {}

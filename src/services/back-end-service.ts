@@ -3,27 +3,20 @@ import { Storage } from '@ionic/storage';
 import { Headers, Http, Response, Request, RequestOptions, RequestMethod } from '@angular/http';
 import { AuthHttp, AuthConfig, tokenNotExpired, JwtHelper } from 'angular2-jwt';
 import 'rxjs/add/operator/toPromise';
-import { AlertController } from 'ionic-angular';
+import { SchdStorage } from './schd-storage';
 
 
 @Injectable()
 export class BackEndService {
-  private backEndUrl = 'http://e5acb0e5.ngrok.io/';  // URL to web api
+  private backEndUrl = 'http://e699065e.ngrok.io/';  // URL to web api
   backEndToken: string;
   private signupSession: string;
   theResponse: any;
-  local: Storage;
   jwtToken: any;
   jwtHelper: JwtHelper = new JwtHelper();
   
-  constructor(private http: Http, 
-              private storage: Storage, 
-              public alertCtrl: AlertController) {
-    storage.ready().then(() => {
-       this.local = storage;
-       return this.getSavedJwt();
-    })
-    .catch(this.handleError);
+  constructor(private http: Http,
+              private storage: SchdStorage) {
   }
   
   getUrl() {
@@ -151,7 +144,7 @@ export class BackEndService {
   }
   
   getSavedJwt() {
-    return this.local.get('id_token').then(profile => {
+    return this.storage.getSavedJwt().then(profile => {
       this.jwtToken = profile;
     });
   }
@@ -165,7 +158,7 @@ export class BackEndService {
   }
   
   authSuccess(token) {
-    this.local.set('id_token', token);
+    this.storage.setJwt(token);
   }
   
   isLoggedIn() {

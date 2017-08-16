@@ -61,3 +61,17 @@ export class MenuMock {
     });
   }
 }
+
+export class SchdStorageMock {
+  public tokenMock = '';
+
+  public getSavedJwt(): any {
+    return new Promise((resolve: Function) => {
+      resolve(this.tokenMock);
+    });
+  }
+
+  setJwt(token) {
+      this.tokenMock = token;
+  }
+}
