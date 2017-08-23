@@ -40,6 +40,7 @@ var GettingStartedPage = (function () {
             latitude: 0,
             longitude: 0
         };
+        this.myToken = this.backEndService.getExpiryDate();
         //this.schdLocation.toastGeo(this.myNav);
     };
     return GettingStartedPage;

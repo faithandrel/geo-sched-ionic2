@@ -2,8 +2,10 @@ import { ArticleComponent } from './../../components/article/article';
 import { Component } from '@angular/core';
 import { NavController, ModalController } from 'ionic-angular';
 
-import {BackEndService} from '../../services/back-end-service';
-import {SchdErrorHandler} from '../../services/schd-error-handler';
+import { ListPage } from '../list/list';
+
+import { BackEndService } from '../../services/back-end-service';
+import { SchdErrorHandler } from '../../services/schd-error-handler';
 /*
   Generated class for the Category page.
 
@@ -50,6 +52,10 @@ export class CategoryPage {
         .catch(error => {
             this.schdErrorHandler.showSchdError(error);
         });
+  }
+
+  viewSingleItem(itemId) {
+    this.navCtrl.push(ListPage, { item: itemId });
   }
 
 }

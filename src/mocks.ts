@@ -63,7 +63,7 @@ export class MenuMock {
 }
 
 export class SchdStorageMock {
-  public tokenMock = '';
+  public tokenMock = 'xyzabc';
 
   public getSavedJwt(): any {
     return new Promise((resolve: Function) => {
@@ -71,7 +71,7 @@ export class SchdStorageMock {
     });
   }
 
-  setJwt(token) {
+  public setJwt(token) {
       this.tokenMock = token;
   }
 }

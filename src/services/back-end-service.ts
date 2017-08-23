@@ -8,8 +8,8 @@ import { SchdStorage } from './schd-storage';
 
 @Injectable()
 export class BackEndService {
-  private backEndUrl = 'http://e699065e.ngrok.io/';  // URL to web api
-  backEndToken: string;
+  backEndUrl = 'http://d787a236.ngrok.io/';  // URL to web api
+  backEndToken: any;
   private signupSession: string;
   theResponse: any;
   jwtToken: any;
@@ -27,8 +27,9 @@ export class BackEndService {
     return this.http.get(this.backEndUrl+'test-token')
                .toPromise()
                .then(res => {
-                  this.backEndToken = res.json();
-                  return res.json();
+                  let data = res.json();
+                  this.backEndToken = data.token;
+                  //return res.json();
                 })
                .catch(this.handleError);
   }

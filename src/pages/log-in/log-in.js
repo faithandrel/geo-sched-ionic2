@@ -8,62 +8,98 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Component } from "@angular/core";
-import { Nav } from 'ionic-angular';
-import { GettingStartedPage } from '../../pages/getting-started/getting-started';
+import { TabsPage } from '../tabs/tabs';
+import { SignUpPage } from '../sign-up/sign-up';
 import { BackEndService } from '../../services/back-end-service';
 import { SchdErrorHandler } from '../../services/schd-error-handler';
 import { SchdLocation } from '../../services/schd-location';
-import { AlertController } from 'ionic-angular';
-import { JwtHelper } from 'angular2-jwt';
+import { SchdFacebook } from '../../services/schd-facebook';
+import { NavController, AlertController } from 'ionic-angular';
 var LogInPage = (function () {
-    function LogInPage(backEndService, schdErrorHandler, schdLocation, thisNav, alertCtrl) {
+    function LogInPage(backEndService, schdErrorHandler, schdLocation, schdFacebook, navCtrl, alertCtrl) {
         this.backEndService = backEndService;
         this.schdErrorHandler = schdErrorHandler;
         this.schdLocation = schdLocation;
-        this.thisNav = thisNav;
+        this.schdFacebook = schdFacebook;
+        this.navCtrl = navCtrl;
         this.alertCtrl = alertCtrl;
-        this.jwtHelper = new JwtHelper();
-        this.myNav = thisNav;
+        this.loading = false;
     }
-    LogInPage.prototype.loginThisUser = function () {
+    LogInPage.prototype.loginWithPassword = function () {
         var _this = this;
         this.backEndService
-            .loginTheUser(this.loginUser)
+            .loginWithPassword(this.loginUser)
             .then(function (res) {
             //console.log(this.backEndService.jwtToken);
-            _this.myNav.setRoot(GettingStartedPage);
+            _this.navCtrl.setRoot(TabsPage);
         })
             .catch(function (error) {
             _this.schdErrorHandler.showSchdError(error);
         });
     };
-    LogInPage.prototype.openFacebook = function () {
-        this.backEndService.facebookSignUp(this.loginUser.username, this.loginUser.password);
+    LogInPage.prototype.loginWithFacebook = function () {
+        var _this = this;
+        this.schdFacebook.loginWithFacebook()
+            .then(function (res) {
+            if (res.status == 'connected') {
+                _this.loginUser.facebook = res.authResponse.userID;
+            }
+            return _this.backEndService.loginWithFacebook(_this.loginUser);
+        })
+            .then(function (res) {
+            _this.navCtrl.setRoot(TabsPage);
+            console.log(res);
+        })
+            .catch(function (error) {
+            _this.schdErrorHandler.showSchdError(error);
+        });
+    };
+    LogInPage.prototype.signUp = function () {
+        this.navCtrl.push(SignUpPage);
     };
     LogInPage.prototype.toastTest = function () {
         //this.schdLocation.toastGeo(this.myNav);
     };
     LogInPage.prototype.ngOnInit = function () {
         var _this = this;
+        this.loading = true;
         this.loginUser = {
             name: '',
             password: ''
         };
+        // this.backEndService.getBackEndToken();
         this.backEndService
             .getBackEndToken()
             .then(function (res) {
+            //this.myToken = this.jwtHelper.getTokenExpirationDate(this.backEndService.jwtToken);
             _this.myResponse = res;
-            return _this.backEndService.getSavedJwt();
-        })
-            .then(function (res) {
-            _this.myToken = _this.backEndService.jwtToken;
-            if (_this.backEndService.isLoggedIn()) {
-                _this.myNav.setRoot(GettingStartedPage);
-            }
         })
             .catch(function (error) {
             _this.schdErrorHandler.showSchdError(error);
+        })
+            .then(function (res) {
+            return _this.backEndService.getSavedJwt();
+        })
+            .then(function (res) {
+            /* let alert = this.alertCtrl.create({
+                 title: 'Hey',
+                 subTitle: 'Got',
+                 buttons: [{
+                            text: 'OK',
+                            
+                          }]
+               });
+               alert.present();*/
+            _this.myToken = _this.backEndService.getExpiryDate();
+            if (_this.backEndService.isLoggedIn()) {
+                _this.navCtrl.setRoot(TabsPage);
+                //this.loading = false;
+                return Promise.resolve();
+            }
+            _this.loading = false;
+            return Promise.resolve();
         });
+        //.then(() => ;
         this.schdErrorHandler.checkWeb();
         this.schdLocation.checkGeo();
         this.schdLocation.monitorGeo();
@@ -77,7 +113,8 @@ LogInPage = __decorate([
     __metadata("design:paramtypes", [BackEndService,
         SchdErrorHandler,
         SchdLocation,
-        Nav,
+        SchdFacebook,
+        NavController,
         AlertController])
 ], LogInPage);
 export { LogInPage };

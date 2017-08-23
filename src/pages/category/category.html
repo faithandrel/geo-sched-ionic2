@@ -59,7 +59,7 @@ Ionic pages and navigation.
   </ion-item-group>
   <ion-item-group>
     <ion-item-divider color="grey" no-lines>Articles</ion-item-divider>
-    <button ion-item class="blog" *ngFor="let item of items">
+    <button ion-item class="blog" *ngFor="let item of items" (click)="viewSingleItem(item.id)">
       <ion-thumbnail item-left>
         <img src="assets/img/thumbnail-rotla.png">
       </ion-thumbnail>

@@ -14,16 +14,12 @@ import { LogInPage } from '../pages/log-in/log-in';
 import { ListPage } from '../pages/list/list';
 import { DisplayMapPage } from '../pages/display-map/display-map';
 import { GettingStartedPage } from '../pages/getting-started/getting-started';
-import { BackEndService } from '../services/back-end-service';
-import { SchdLocation } from '../services/schd-location';
-import { SchdErrorHandler } from '../services/schd-error-handler';
 var MyApp = (function () {
-    function MyApp(platform, backEndService, schdErrorHandler, schdLocation) {
+    function MyApp(platform
+        /*private backEndService: BackEndService,
+        private schdErrorHandler: SchdErrorHandler,
+        private schdLocation: SchdLocation*/ ) {
         this.platform = platform;
-        this.backEndService = backEndService;
-        this.schdErrorHandler = schdErrorHandler;
-        this.schdLocation = schdLocation;
-        this.rootPage = LogInPage;
         this.initializeApp();
         // used for an example of ngFor and navigation
         this.pages = [
@@ -31,6 +27,7 @@ var MyApp = (function () {
             { title: 'List', component: ListPage },
             { title: 'Map', component: DisplayMapPage }
         ];
+        this.rootPage = LogInPage;
     }
     MyApp.prototype.initializeApp = function () {
         this.platform.ready().then(function () {
@@ -56,10 +53,10 @@ MyApp = __decorate([
     Component({
         templateUrl: 'app.html'
     }),
-    __metadata("design:paramtypes", [Platform,
-        BackEndService,
-        SchdErrorHandler,
-        SchdLocation])
+    __metadata("design:paramtypes", [Platform
+        /*private backEndService: BackEndService,
+        private schdErrorHandler: SchdErrorHandler,
+        private schdLocation: SchdLocation*/ ])
 ], MyApp);
 export { MyApp };
 //# sourceMappingURL=app.component.js.map

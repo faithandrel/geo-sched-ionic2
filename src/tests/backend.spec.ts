@@ -1,5 +1,5 @@
-import { TestBed, inject, async } from '@angular/core/testing';
-import { Http, HttpModule, BaseRequestOptions, Response, ResponseOptions } from '@angular/http';
+import { TestBed, inject, async, fakeAsync } from '@angular/core/testing';
+import { Http, HttpModule, BaseRequestOptions, Response, ResponseOptions, RequestMethod } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 import { SchdStorageMock } from '../mocks';
 
@@ -40,40 +40,102 @@ describe('Service: Backend', () => {
         }).compileComponents();
  
     }));
- 
-    beforeEach(() => {
- 
-    });
- 
-   it('can save and get jwt token', inject([BackEndService], (backendService) => {
-        let tokenTest = 'abxdf';
 
-        backendService.authSuccess(tokenTest);
+   it('can save and get jwt token', fakeAsync(
+        inject([BackEndService], (backendService) => {
+          let tokenTest = 'abxdf';
+
+            backendService.authSuccess(tokenTest);
+            
+            backendService.getSavedJwt().then(res => {
+               expect(backendService.jwtToken == tokenTest).toBeTruthy();
         
-        backendService.getSavedJwt().then(res => {
-           expect(backendService.jwtToken == tokenTest).toBeTruthy();
-        
-        });
+            });
+        })
+    ));
+
+    it('can get backend token', fakeAsync(
+        inject([BackEndService, MockBackend], (backendService, mockBackend) => {
+         
+            let lastConnection = null;
+            let tokenTest = "$2y$10$j7ynzsvnvGWxCuapBOLnQkQVu8dvTZAL6q";
+
+            const mockResponse = '{"token": "' + tokenTest + '" }';
+     
+     
+            mockBackend.connections.subscribe((connection) => {
+     
+                connection.mockRespond(new Response(new ResponseOptions({
+                    body: mockResponse
+                })));
+
+                lastConnection = connection;
+            });
       
-    }));
+            backendService.getBackEndToken().then(res => {
+               expect(backendService.backEndToken).toBe(tokenTest);
+               expect(lastConnection.request.url).toBe(backendService.backEndUrl+'test-token');
+               expect(lastConnection.request.method).toBe(RequestMethod.Get);
+            });
+     
+        })
+    ));
 
-    it('can get backend token', inject([BackEndService, MockBackend], (backendService, mockBackend) => {
- 
-        let tokenTest = 'fghsdfh';
- 
-        mockBackend.connections.subscribe((connection) => {
- 
-            connection.mockRespond(new Response(new ResponseOptions({
-                body: tokenTest
-            })));
- 
-        });
-  
-        backendService.getBackEndToken().then(res => {
-           expect(res == tokenTest).toBeTruthy();
-           
-        });
- 
-    }));
+    it('can get item list', fakeAsync( 
+        inject([BackEndService, MockBackend, Http], 
+                                    (backendService, mockBackend, http) => {
+
+            let lastConnection = null;
+
+            mockBackend.connections.subscribe((connection) => {
+     
+                connection.mockRespond(new Response(new ResponseOptions({
+                    body: require('./files/items.json')
+                })));
+
+                lastConnection = connection;
+     
+            });
+
+            backendService.getItems().then(
+               (res) => {
+                   expect(res.length).toEqual(2);
+                   expect(lastConnection.request.url).toBe(backendService.backEndUrl+'get-items');
+                   expect(lastConnection.request.method).toBe(RequestMethod.Get);
+            });
+            
+        })
+    ));
+
+    it('can post new item', fakeAsync( 
+        inject([BackEndService, MockBackend, Http], 
+                                    (backendService, mockBackend, http) => {
+
+            let lastConnection = null;
+            let testItem = {
+                title: 'Test',
+                content: 'This is a test.'
+            }
+            mockBackend.connections.subscribe((connection) => {
+     
+                connection.mockRespond(new Response(new ResponseOptions({
+                    body: '{"test": "test"}'
+                })));
+
+                lastConnection = connection;
+     
+            });
+
+            backendService.getSavedJwt().then(res => {
+                return backendService.saveItem(testItem)               
+            })
+            .then((res) => {
+                   expect(lastConnection.request.url).toBe(backendService.backEndUrl+'save-item');
+                   expect(lastConnection.request.method).toBe(RequestMethod.Post);
+                   expect(lastConnection.request.getBody()).toBe(JSON.stringify(testItem));
+            });
+            
+        })
+    ));
  
 });

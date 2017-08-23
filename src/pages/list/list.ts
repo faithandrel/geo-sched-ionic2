@@ -8,12 +8,13 @@ import {SchdErrorHandler} from '../../services/schd-error-handler';
   templateUrl: 'list.html'
 })
 export class ListPage {
-  selectedItem: any;
+  selectedItem: number;
   icons: string[];
   items: Array<{title: string, note: string, icon: string}>;
   myResults: any;
   
-  constructor(private nav: NavController, navParams: NavParams,
+  constructor(private nav: NavController, 
+                      navParams: NavParams,
               private myNav: Nav,
               private backEndService: BackEndService,
               private schdErrorHandler: SchdErrorHandler) {

@@ -8,23 +8,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { Injectable } from '@angular/core';
-import { Storage } from '@ionic/storage';
 import { Headers, Http, Request, RequestOptions, RequestMethod } from '@angular/http';
-import { tokenNotExpired } from 'angular2-jwt';
+import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
 import 'rxjs/add/operator/toPromise';
-import { AlertController } from 'ionic-angular';
+import { SchdStorage } from './schd-storage';
 var BackEndService = (function () {
-    function BackEndService(http, storage, alertCtrl) {
-        var _this = this;
+    function BackEndService(http, storage) {
         this.http = http;
         this.storage = storage;
-        this.alertCtrl = alertCtrl;
-        this.backEndUrl = 'http://171f9bc4.ngrok.io/'; // URL to web api
-        storage.ready().then(function () {
-            _this.local = storage;
-            return _this.getSavedJwt();
-        })
-            .catch(this.handleError);
+        this.backEndUrl = 'http://e699065e.ngrok.io/'; // URL to web api
+        this.jwtHelper = new JwtHelper();
     }
     BackEndService.prototype.getUrl = function () {
         return this.backEndUrl;
@@ -34,8 +27,9 @@ var BackEndService = (function () {
         return this.http.get(this.backEndUrl + 'test-token')
             .toPromise()
             .then(function (res) {
-            _this.backEndToken = res.json();
-            return res.json();
+            var data = res.json();
+            _this.backEndToken = data.token;
+            //return res.json();
         })
             .catch(this.handleError);
     };
@@ -56,7 +50,7 @@ var BackEndService = (function () {
             .then(function (res) { return res.json(); })
             .catch(this.handleError);
     };
-    BackEndService.prototype.facebookSignUp = function (username, password) {
+    BackEndService.prototype.facebookSignUpDepcrecated = function (username, password) {
         var _this = this;
         var body = "username=" + username + "&password=" + password + "&_token=" + this.backEndToken;
         var myHeaders = new Headers();
@@ -77,6 +71,29 @@ var BackEndService = (function () {
         })
             .catch(this.handleError);
     };
+    BackEndService.prototype.facebookSignUp = function (newUser) {
+        var body = "username=" + newUser.username +
+            "&facebook=" + newUser.facebook +
+            "&access=" + newUser.fbToken +
+            "&_token=" + this.backEndToken;
+        var myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+        var options = new RequestOptions({
+            method: RequestMethod.Post,
+            url: this.backEndUrl + 'fb-sign-up',
+            headers: myHeaders,
+            body: body,
+        });
+        var req = new Request(options);
+        console.log(myHeaders);
+        return this.http.request(req)
+            .toPromise()
+            .then(function (res) {
+            console.log(res);
+            //open(this.backEndUrl+'sign-up-facebook?signup='+this.signupSession);
+        })
+            .catch(this.handleError);
+    };
     BackEndService.prototype.getItems = function () {
         var auth = 'Bearer ' + this.getJwtToken();
         var myHeaders = new Headers();
@@ -90,7 +107,7 @@ var BackEndService = (function () {
         var req = new Request(options);
         return this.http.request(req)
             .toPromise()
-            .then(function (res) { return JSON.stringify(res.json()); })
+            .then(function (res) { return res.json(); })
             .catch(this.handleError);
     };
     BackEndService.prototype.saveItem = function (item) {
@@ -114,27 +131,61 @@ var BackEndService = (function () {
     };
     BackEndService.prototype.getSavedJwt = function () {
         var _this = this;
-        return this.local.get('id_token').then(function (profile) {
+        return this.storage.getSavedJwt().then(function (profile) {
             _this.jwtToken = profile;
         });
     };
     BackEndService.prototype.getJwtToken = function () {
         return this.jwtToken;
     };
+    BackEndService.prototype.getExpiryDate = function () {
+        return this.jwtHelper.getTokenExpirationDate(this.jwtToken);
+    };
     BackEndService.prototype.authSuccess = function (token) {
-        this.local.set('id_token', token);
+        this.storage.setJwt(token);
     };
     BackEndService.prototype.isLoggedIn = function () {
         return tokenNotExpired('id_token', this.jwtToken);
     };
-    BackEndService.prototype.loginTheUser = function (userObject) {
+    BackEndService.prototype.loginWithPassword = function (userObject) {
         var _this = this;
-        var body = "username=" + userObject.username + "&password=" + userObject.password + "&_token=" + this.backEndToken;
+        var body = "username=" + userObject.username +
+            "&password=" + userObject.password +
+            "&_token=" + this.backEndToken;
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
         var options = new RequestOptions({
             method: RequestMethod.Post,
-            url: this.backEndUrl + 'test-auth',
+            url: this.backEndUrl + 'password-log-in',
+            headers: myHeaders,
+            body: body,
+        });
+        var req = new Request(options);
+        return this.http.request(req)
+            .toPromise()
+            .then(function (res) {
+            var data = res.json();
+            if (data.token != undefined) {
+                _this.authSuccess(data.token);
+                _this.jwtToken = data.token;
+                return true;
+            }
+            else {
+                return false;
+            }
+        })
+            .catch(this.handleError);
+    };
+    BackEndService.prototype.loginWithFacebook = function (userObject) {
+        var _this = this;
+        var body = "username=" + userObject.username +
+            "&facebook=" + userObject.facebook +
+            "&_token=" + this.backEndToken;
+        var myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
+        var options = new RequestOptions({
+            method: RequestMethod.Post,
+            url: this.backEndUrl + 'facebook-log-in',
             headers: myHeaders,
             body: body,
         });
@@ -161,7 +212,8 @@ var BackEndService = (function () {
 }());
 BackEndService = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [Http, Storage, AlertController])
+    __metadata("design:paramtypes", [Http,
+        SchdStorage])
 ], BackEndService);
 export { BackEndService };
 //# sourceMappingURL=back-end-service.js.map

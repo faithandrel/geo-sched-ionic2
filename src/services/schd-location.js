@@ -44,6 +44,25 @@ var SchdLocation = (function () {
         });
     };
     SchdLocation.prototype.getGeo = function () {
+        return Geolocation.getCurrentPosition().then(function (res) {
+            return {
+                latitude: res.coords.latitude,
+                longitude: res.coords.longitude
+            };
+        }).catch(function (error) {
+            return error;
+        });
+    };
+    SchdLocation.prototype.checkGeo = function () {
+        return Diagnostic.isLocationEnabled().then(function (res) {
+            if (!res) {
+                return Promise.reject('Please turn on your GPS.');
+            }
+            return Promise.resolve(res);
+        })
+            .catch(function (e) { return Promise.reject(e); });
+    };
+    SchdLocation.prototype.getGeoDeprecated = function () {
         if (this.myLocation != false) {
             return Promise.resolve(this.myLocation);
         }
@@ -60,7 +79,7 @@ var SchdLocation = (function () {
                 nav.present(toast);
               });*/
     };
-    SchdLocation.prototype.checkGeo = function () {
+    SchdLocation.prototype.checkGeoDeprecated = function () {
         var _this = this;
         var locInterval = Observable.interval(10000);
         var previousStatus = this.locationStatus;
@@ -74,10 +93,21 @@ var SchdLocation = (function () {
                     });
                     toast.present(toast);
                 }
-                return _this.getGeo();
+                //return this.getGeo();
             }).then(function (res) {
             }, function (err) {
                 if (_this.locationStatus) {
+                    /*let alert = this.alertCtrl.create({
+                     title: 'GPS',
+                     subTitle: 'Restart app...' + JSON.stringify(previousStatus),
+                     buttons: [{
+                                text: 'OK',
+                                handler: () => {
+                                  location.reload();
+                                }
+                              }]
+                   });
+                   alert.present();*/
                 }
             });
         });

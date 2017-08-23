@@ -50,7 +50,8 @@ ListPage = ListPage_1 = __decorate([
     Component({
         templateUrl: 'list.html'
     }),
-    __metadata("design:paramtypes", [NavController, NavParams,
+    __metadata("design:paramtypes", [NavController,
+        NavParams,
         Nav,
         BackEndService,
         SchdErrorHandler])

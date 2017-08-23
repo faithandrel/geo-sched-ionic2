@@ -70,4 +70,20 @@ var MenuMock = (function () {
     return MenuMock;
 }());
 export { MenuMock };
+var SchdStorageMock = (function () {
+    function SchdStorageMock() {
+        this.tokenMock = '';
+    }
+    SchdStorageMock.prototype.getSavedJwt = function () {
+        var _this = this;
+        return new Promise(function (resolve) {
+            resolve(_this.tokenMock);
+        });
+    };
+    SchdStorageMock.prototype.setJwt = function (token) {
+        this.tokenMock = token;
+    };
+    return SchdStorageMock;
+}());
+export { SchdStorageMock };
 //# sourceMappingURL=mocks.js.map
