@@ -8,7 +8,7 @@ import { SchdStorage } from './schd-storage';
 
 @Injectable()
 export class BackEndService {
-  backEndUrl = 'http://d787a236.ngrok.io/';  // URL to web api
+  backEndUrl = 'http://24e8f846.ngrok.io/';  // URL to web api
   backEndToken: any;
   private signupSession: string;
   theResponse: any;
@@ -34,6 +34,25 @@ export class BackEndService {
                .catch(this.handleError);
   }
   
+  //TODO: probably move to own service
+  private prepareHttpRequest(body: string, url: string, withAuth: boolean, method) {
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+
+    if(withAuth === true) {
+       var auth = 'Bearer ' + this.getJwtToken();
+       myHeaders.append('Authorization', auth);
+    }
+
+    var options = new RequestOptions({
+      method: method,
+      url: this.backEndUrl + url,
+      headers: myHeaders,
+      body: body
+    });
+    return new Request(options);
+  }
+
   addNewUser (name: string) {
     let body = "title=" + name + "&_token=" + this.backEndToken;
     let myHeaders = new Headers();
@@ -103,18 +122,8 @@ export class BackEndService {
   }
   
   getItems() {
-    var auth = 'Bearer ' + this.getJwtToken();
-  
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
-    myHeaders.append('Authorization', auth);
-    var options = new RequestOptions({
-      method: RequestMethod.Get,
-      url: this.backEndUrl+'get-items',
-      headers: myHeaders,
-    });
-  
-    var req = new Request(options);
+
+    var req = this.prepareHttpRequest('', 'get-items', true, RequestMethod.Get);
     
     return this.http.request(req)
           .toPromise()
@@ -124,19 +133,8 @@ export class BackEndService {
   
   saveItem(item) {
     var body = JSON.stringify(item);
-    var auth = 'Bearer ' + this.getJwtToken();
-    
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    myHeaders.append('Authorization', auth);
-    var options = new RequestOptions({
-      method: RequestMethod.Post,
-      url: this.backEndUrl+'save-item',
-      headers: myHeaders,
-      body: body
-    });
-    console.log(auth);
-    var req = new Request(options);
+
+    var req = this.prepareHttpRequest(body, 'save-item', true, RequestMethod.Post);
     
     return this.http.request(req)
           .toPromise()
@@ -167,19 +165,10 @@ export class BackEndService {
   }
   
   loginWithPassword(userObject) {
-    let body = "username=" + userObject.username + 
-               "&password=" + userObject.password + 
-               "&_token=" + this.backEndToken;
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
-    var options = new RequestOptions({
-      method: RequestMethod.Post,
-      url: this.backEndUrl+'password-log-in',
-      headers: myHeaders,
-      body: body,
-    });
+    userObject._token = this.backEndToken;
+    let body = JSON.stringify(userObject);
     
-    var req = new Request(options);
+    var req = this.prepareHttpRequest(body, 'password-log-in', false, RequestMethod.Post);
     
     return this.http.request(req)
           .toPromise()
@@ -198,19 +187,13 @@ export class BackEndService {
   }
   
   loginWithFacebook(userObject) {
-    let body = "username=" + userObject.username + 
-               "&facebook=" + userObject.facebook + 
-               "&_token=" + this.backEndToken;
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/x-www-form-urlencoded');
-    var options = new RequestOptions({
-      method: RequestMethod.Post,
-      url: this.backEndUrl+'facebook-log-in',
-      headers: myHeaders,
-      body: body,
-    });
+    userObject._token = this.backEndToken;
+    let body = JSON.stringify(userObject);
+    /*let body = "username=" + userObject.username + 
+               "&facebook=" + userObject.facebook
+               "&_token=" + this.backEndToken;*/
     
-    var req = new Request(options);
+    var req = this.prepareHttpRequest(body, 'facebook-log-in', false, RequestMethod.Post);
     
     return this.http.request(req)
           .toPromise()

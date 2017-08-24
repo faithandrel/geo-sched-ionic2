@@ -43,7 +43,7 @@ describe('Service: Backend', () => {
 
    it('can save and get jwt token', fakeAsync(
         inject([BackEndService], (backendService) => {
-          let tokenTest = 'abxdf';
+            let tokenTest = 'abxdf';
 
             backendService.authSuccess(tokenTest);
             
@@ -96,18 +96,22 @@ describe('Service: Backend', () => {
                 lastConnection = connection;
      
             });
-
-            backendService.getItems().then(
+            backendService.getSavedJwt().then(res => {
+                 return backendService.getItems();             
+            })
+            .then(
                (res) => {
                    expect(res.length).toEqual(2);
                    expect(lastConnection.request.url).toBe(backendService.backEndUrl+'get-items');
                    expect(lastConnection.request.method).toBe(RequestMethod.Get);
+                   expect(lastConnection.request.headers.get('Authorization'))
+                           .toBe('Bearer xyzabc');
             });
             
         })
     ));
 
-    it('can post new item', fakeAsync( 
+    it('can save new item', fakeAsync( 
         inject([BackEndService, MockBackend, Http], 
                                     (backendService, mockBackend, http) => {
 
@@ -127,15 +131,80 @@ describe('Service: Backend', () => {
             });
 
             backendService.getSavedJwt().then(res => {
-                return backendService.saveItem(testItem)               
+                 backendService.saveItem(testItem)               
             })
             .then((res) => {
                    expect(lastConnection.request.url).toBe(backendService.backEndUrl+'save-item');
                    expect(lastConnection.request.method).toBe(RequestMethod.Post);
                    expect(lastConnection.request.getBody()).toBe(JSON.stringify(testItem));
+                   expect(lastConnection.request.headers.get('Authorization'))
+                           .toBe('Bearer xyzabc');
             });
             
         })
     ));
- 
+
+    it('can log in with facebook', fakeAsync( 
+        inject([BackEndService, MockBackend, Http], 
+                                    (backendService, mockBackend, http) => {
+
+            let lastConnection = null;
+            let testFbUser = {
+                username: 'test',
+                facebook: '12345'
+            }
+            let tokenTest = 'abxdf';
+
+            mockBackend.connections.subscribe((connection) => {
+     
+                connection.mockRespond(new Response(new ResponseOptions({
+                    body: '{"token": "'+tokenTest+'"}'
+                })));
+
+                lastConnection = connection;
+     
+            });
+
+            backendService.loginWithFacebook(testFbUser).then((res) => {
+                   expect(res).toBeTruthy();
+                   expect(lastConnection.request.url).toBe(backendService.backEndUrl+'facebook-log-in');
+                   expect(lastConnection.request.method).toBe(RequestMethod.Post);
+                   //TODO: add check for request body
+                   expect(backendService.jwtToken).toBe(tokenTest);
+            });
+            
+        })
+    ));
+    
+    it('can log in with password', fakeAsync( 
+        inject([BackEndService, MockBackend, Http], 
+                                    (backendService, mockBackend, http) => {
+
+            let lastConnection = null;
+            let testUser = {
+                username: 'test',
+                facebook: '12345'
+            }
+            let tokenTest = 'abxdf';
+
+            mockBackend.connections.subscribe((connection) => {
+     
+                connection.mockRespond(new Response(new ResponseOptions({
+                    body: '{"token": "'+tokenTest+'"}'
+                })));
+
+                lastConnection = connection;
+     
+            });
+
+            backendService.loginWithPassword(testUser).then((res) => {
+                   expect(res).toBeTruthy();
+                   expect(lastConnection.request.url).toBe(backendService.backEndUrl+'password-log-in');
+                   expect(lastConnection.request.method).toBe(RequestMethod.Post);
+                   //expect(lastConnection.request.getBody()).toBe(JSON.stringify(testItem));
+                   expect(backendService.jwtToken).toBe(tokenTest);
+            });
+            
+        })
+    ));
 });
