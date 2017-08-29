@@ -3,9 +3,6 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 
 import { LogInPage } from '../pages/log-in/log-in';
-import { ListPage } from '../pages/list/list';
-import { DisplayMapPage } from '../pages/display-map/display-map';
-import { GettingStartedPage } from '../pages/getting-started/getting-started';
 
 import { BackEndService } from '../services/back-end-service';
 import { SchdLocation } from '../services/schd-location';
@@ -28,11 +25,11 @@ export class MyApp {
     this.initializeApp();
     
     // used for an example of ngFor and navigation
-    this.pages = [
+    /*this.pages = [
       { title: 'Getting Started', component: GettingStartedPage },
       { title: 'List', component: ListPage },
       { title: 'Map', component: DisplayMapPage }
-    ];
+    ];*/
 
     this.rootPage = LogInPage;
   }

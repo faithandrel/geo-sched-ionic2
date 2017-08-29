@@ -29,9 +29,7 @@ export class AddArticleComponent {
 
     this.article = this.formBuilder.group({
       title: ['', Validators.required],
-      author: ['', Validators.required],
       contentBody: ['', Validators.required],
-      articleType: ['', Validators.required],
       recurring: ['false']
     });
 

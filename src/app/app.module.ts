@@ -8,7 +8,7 @@ import { Facebook } from '@ionic-native/facebook';
 import { LogInPage}  from '../pages/log-in/log-in';
 import { SignUpPage } from '../pages/sign-up/sign-up';
 import { GettingStartedPage } from '../pages/getting-started/getting-started';
-import { ListPage } from '../pages/list/list';
+import { ItemPage } from '../pages/item/item';
 import { DisplayMapPage } from '../pages/display-map/display-map';
 import { ProfilePage } from './../pages/profile/profile';
 import { CategoryPage } from './../pages/category/category';
@@ -32,7 +32,7 @@ import { ArticleComponent } from './../components/article/article';
     LogInPage,
     SignUpPage,
     GettingStartedPage,
-    ListPage,
+    ItemPage,
     DisplayMapPage,
     CategoryPage,
     ProfilePage,
@@ -53,7 +53,7 @@ import { ArticleComponent } from './../components/article/article';
     LogInPage,
     SignUpPage,
     GettingStartedPage,
-    ListPage,
+    ItemPage,
     DisplayMapPage,
     CategoryPage,
     ProfilePage,

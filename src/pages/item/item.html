@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>View</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <p> 
+    {{ selectedItem.title }}
+  </p>
+  
+  <p>
+    {{ selectedItem.content }}
+  </p>
+  <form [formGroup]="commentForm" (ngSubmit)="itemsTest()">
+    <ion-item-group>
+      <ion-item>
+        <ion-label floating>Comment</ion-label>
+        <ion-textarea formControlName="content"></ion-textarea>
+      </ion-item>
+    </ion-item-group>
+
+    <p> 
+      <button ion-button type="submit" >Test</button>
+    </p>
+  </form>
+
+</ion-content>
