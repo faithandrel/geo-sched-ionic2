@@ -17,6 +17,9 @@
   </p>
   <form [formGroup]="commentForm" (ngSubmit)="itemsTest()">
     <ion-item-group>
+      <ion-item *ngFor="let comment of selectedItem.comments">
+        <h2>{{ comment.content }}</h2>
+      </ion-item>
       <ion-item>
         <ion-label floating>Comment</ion-label>
         <ion-textarea formControlName="content"></ion-textarea>
@@ -24,7 +27,7 @@
     </ion-item-group>
 
     <p> 
-      <button ion-button type="submit" >Test</button>
+      <button ion-button type="submit" >Submit</button>
     </p>
   </form>
 
