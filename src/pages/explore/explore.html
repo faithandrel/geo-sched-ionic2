@@ -1,0 +1,29 @@
+
+<ion-header>
+  <ion-navbar>
+    <ion-title>Explore</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-fab class="special-fab -top" top right edge (click)="refreshPage()">
+  <button class="refresh-page" ion-fab mini color="dark">
+    <ion-icon name="refresh"></ion-icon>
+  </button>
+</ion-fab>
+
+<ion-content>
+  <ion-item-group class="emoji-feed">
+    <ion-item-divider color="grey" no-lines>People</ion-item-divider>
+    <ion-grid>
+      <ion-row *ngFor="let emojis of emojiArray">
+        <ion-col *ngFor="let emoji of emojis">
+          <section>
+            <ion-item no-lines>
+              <span>{{ emoji }}</span>
+            </ion-item>
+          </section>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item-group>
+</ion-content>

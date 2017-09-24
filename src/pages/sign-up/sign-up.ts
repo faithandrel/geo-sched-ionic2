@@ -1,6 +1,5 @@
 import { Component, OnInit } from "@angular/core";
 
-import { GettingStartedPage } from '../getting-started/getting-started';
 import { TabsPage } from '../tabs/tabs';
 
 import { BackEndService } from '../../services/back-end-service';

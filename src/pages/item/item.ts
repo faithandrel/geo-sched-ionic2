@@ -1,6 +1,8 @@
 import { Component } from "@angular/core";
-import { NavController, NavParams, Nav, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, Nav, LoadingController, ToastController } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
+//import { Geolocation } from '@ionic-native/geolocation'
+import { Geolocation, Diagnostic } from 'ionic-native';
 
 import { BackEndService } from '../../services/back-end-service';
 import { SchdErrorHandler } from '../../services/schd-error-handler';
@@ -22,8 +24,10 @@ export class ItemPage {
                       navParams: NavParams,
               private myNav: Nav,
               public loadingCtrl: LoadingController,
+              public toastCtrl: ToastController,
               private backEndService: BackEndService,
               private formBuilder: FormBuilder,
+              //private geolocation: Geolocation,
               private schdLocation: SchdLocation,
               private schdErrorHandler: SchdErrorHandler) {
     // If we navigated to this page, we will have an item available as a nav param
@@ -44,17 +48,38 @@ export class ItemPage {
         icon: this.icons[Math.floor(Math.random() * this.icons.length)]
       });
     }
+
+    //TODO: make service to handle detection of geo
+    Diagnostic.registerLocationStateChangeHandler(function(){
+      console.log('Toggled location!');
+      location.reload();
+     /*Geolocation.getCurrentPosition().then((resp) => {
+        console.log('Test geo'+ resp.coords.latitude);
+      }).catch((error) => {
+        console.log('Error getting location', error);
+      });*/
+      
+    });
   }
 
-  itemTapped(event, item) {
-    this.nav.push(ItemPage, {
-      item: item
+  itemTapped() {
+    let loader = this.loadingCtrl.create({content: 'Loading...'});
+    loader.present()
+    Geolocation.getCurrentPosition().then((resp) => {
+      loader.dismiss();
+      let toast = this.toastCtrl.create({
+          message: 'Test Geo '+resp.coords.latitude,
+          duration: 9000,
+        });
+        toast.present();
+    }).catch((error) => {
+      console.log('Error getting location', error);
     });
   }
   
   itemsTest() {
     let loader = this.loadingCtrl.create({content: 'Loading...'});
-    loader.present()
+    loader.present();
 
     let newItem = {
       title: '',

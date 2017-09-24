@@ -4,11 +4,12 @@ import { MyApp } from './app.component';
 
 import { IonicStorageModule } from '@ionic/storage';
 import { Facebook } from '@ionic-native/facebook';
+import { Geolocation } from '@ionic-native/geolocation';
 
 import { LogInPage}  from '../pages/log-in/log-in';
 import { SignUpPage } from '../pages/sign-up/sign-up';
-import { GettingStartedPage } from '../pages/getting-started/getting-started';
 import { ItemPage } from '../pages/item/item';
+import { ExplorePage } from '../pages/explore/explore';
 import { DisplayMapPage } from '../pages/display-map/display-map';
 import { ProfilePage } from './../pages/profile/profile';
 import { CategoryPage } from './../pages/category/category';
@@ -31,8 +32,8 @@ import { ArticleComponent } from './../components/article/article';
     MyApp,
     LogInPage,
     SignUpPage,
-    GettingStartedPage,
     ItemPage,
+    ExplorePage,
     DisplayMapPage,
     CategoryPage,
     ProfilePage,
@@ -52,8 +53,8 @@ import { ArticleComponent } from './../components/article/article';
     MyApp,
     LogInPage,
     SignUpPage,
-    GettingStartedPage,
     ItemPage,
+    ExplorePage,
     DisplayMapPage,
     CategoryPage,
     ProfilePage,
@@ -68,6 +69,7 @@ import { ArticleComponent } from './../components/article/article';
               {provide: SchdErrorHandler, useClass: SchdErrorHandler},
               {provide: SchdLocation, useClass: SchdLocation},
               {provide: Facebook, useClass: Facebook},
+              {provide: Geolocation, useClass: Geolocation},
               {provide: SchdFacebook, useClass: SchdFacebook},
               {provide: SchdStorage, useClass: SchdStorage}]
 })

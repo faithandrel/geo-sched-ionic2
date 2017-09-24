@@ -1,6 +1,6 @@
 import { ArticleComponent } from './../../components/article/article';
 import { Component } from '@angular/core';
-import { NavController, ModalController } from 'ionic-angular';
+import { NavController, ModalController, LoadingController } from 'ionic-angular';
 
 import { ItemPage } from '../item/item';
 
@@ -24,6 +24,7 @@ export class CategoryPage {
 
   constructor(public navCtrl: NavController, 
               public modalCtrl: ModalController,
+              public loadingCtrl: LoadingController,
               private backEndService: BackEndService,
               private schdErrorHandler: SchdErrorHandler) { 
     this.category = 'travel';
@@ -55,13 +56,17 @@ export class CategoryPage {
   }
 
   viewSingleItem(itemId) {
+    let loader = this.loadingCtrl.create({content: 'Loading...'});
+    loader.present()
     this.backEndService
         .getSingleItem(itemId)
         .then(res => {
             this.navCtrl.push(ItemPage, { item: res });
+            loader.dismiss();
         })
         .catch(error => {
-            this.schdErrorHandler.showSchdError(error);
+          console.log(error);
+            //this.schdErrorHandler.showSchdError(error);
         });
     
   }

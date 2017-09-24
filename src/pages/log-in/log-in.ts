@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 
-import { GettingStartedPage } from '../getting-started/getting-started';
 import { TabsPage } from '../tabs/tabs';
 import { SignUpPage } from '../sign-up/sign-up';
 

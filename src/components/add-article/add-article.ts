@@ -1,4 +1,4 @@
-import { ViewController } from 'ionic-angular';
+import { ViewController, LoadingController } from 'ionic-angular';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BackEndService } from '../../services/back-end-service';
@@ -21,6 +21,7 @@ export class AddArticleComponent {
   newItem: any;
 
   constructor(public viewCtrl: ViewController, 
+              public loadingCtrl: LoadingController,
               private formBuilder: FormBuilder,
               private backEndService: BackEndService,
               private schdErrorHandler: SchdErrorHandler,
@@ -36,7 +37,8 @@ export class AddArticleComponent {
   }
 
   saveForm() {
-    console.log(this.article.value);
+    /*let loader = this.loadingCtrl.create({content: 'Loading...'});
+    loader.present()*/
     
     var item     = {};
     this.newItem = {
@@ -53,7 +55,8 @@ export class AddArticleComponent {
       return this.backEndService.saveItem(item);
     })
     .then(res => {
-        this.schdErrorHandler.showSchdError(res);
+      this.closeModal();
+      //loader.dismiss();
     })
     .catch(error => {
         this.schdErrorHandler.showSchdError(error);

@@ -1,7 +1,7 @@
 import { InterestsPage } from './../interests/interests';
 import { AddArticleComponent } from './../../components/add-article/add-article';
 import { ModalController } from 'ionic-angular';
-import { ProfilePage } from './../profile/profile';
+import { ExplorePage } from './../explore/explore';
 import { CategoryPage } from './../category/category';
 import { FeedPage } from './../feed/feed';
 import { Component } from '@angular/core';
@@ -14,7 +14,7 @@ export class TabsPage {
   // should be each tab's root Page
   feedRoot: any = FeedPage;
   categoryRoot: any = CategoryPage;
-  profileRoot: any = ProfilePage;
+  exploreRoot: any = ExplorePage;
   interestsRoot: any = InterestsPage;
 
   constructor(public modalCtrl: ModalController) {

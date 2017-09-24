@@ -8,7 +8,7 @@ import { SchdStorage } from './schd-storage';
 
 @Injectable()
 export class BackEndService {
-  backEndUrl = 'http://c6cf55a2.ngrok.io/';  // URL to web api
+  backEndUrl = 'http://623f6f3f.ngrok.io/';  // URL to web api
   backEndToken: any;
   private signupSession: string;
   theResponse: any;
@@ -186,6 +186,15 @@ export class BackEndService {
               return false;
             }
           })
+          .catch(this.handleError);
+  }
+
+  getExploreFeed(): Promise<any> {
+    var req = this.prepareHttpRequest('', 'explore-feed', false, RequestMethod.Get);
+    
+    return this.http.request(req)
+          .toPromise()
+          .then(res => res.json())
           .catch(this.handleError);
   }
 
