@@ -1,8 +1,5 @@
-import { ArticleComponent } from './../../components/article/article';
 import { Component } from '@angular/core';
-import { NavController, ModalController, LoadingController } from 'ionic-angular';
-
-import { ItemPage } from '../item/item';
+import { NavController, NavParams, LoadingController } from 'ionic-angular';
 
 import { BackEndService } from '../../services/back-end-service';
 import { SchdErrorHandler } from '../../services/schd-error-handler';
@@ -18,57 +15,48 @@ import { SchdErrorHandler } from '../../services/schd-error-handler';
 })
 export class CategoryPage {
 
-  category: string;  
+  feedTitle: string;  
+  feedType: string;
+  backEndFunction: any;
   items: any;
-  myTest: any;
+  
 
-  constructor(public navCtrl: NavController, 
-              public modalCtrl: ModalController,
+  constructor(private navCtrl: NavController, 
+                      navParams: NavParams, 
               public loadingCtrl: LoadingController,
               private backEndService: BackEndService,
               private schdErrorHandler: SchdErrorHandler) { 
-    this.category = 'travel';
+    this.feedTitle = 'Near You';
+    this.feedType  = 'news';
+    
+
+    let feedTitle = navParams.get('title');
+    let feedType  = navParams.get('type');
+
+    if(feedTitle != undefined && feedType != undefined) {
+      this.feedTitle = feedTitle;
+      this.feedType  = feedType;
+    }
+
     this.refreshPage();
   }
 
-  openArticle() {
-    let modal = this.modalCtrl.create(ArticleComponent, {
-      article: {
-        title: 'Lets not React',
-        author: 'Craig Michaels',
-        tags: ['React', 'JS'],
-        img: 'm2.jpg'
-      }
-    })
-    modal.present();
-  }
-
   refreshPage() {
-    this.backEndService
-        .getItems()
-        .then(res => {
-          this.items = res;
-          this.myTest = JSON.stringify(this.items);
-        })
-        .catch(error => {
-            this.schdErrorHandler.showSchdError(error);
-        });
+    this.callBackEndFunction().then(res => {
+      this.items = res;
+    })
+    .catch(error => {
+        this.schdErrorHandler.showSchdError(error);
+    });
   }
 
-  viewSingleItem(itemId) {
-    let loader = this.loadingCtrl.create({content: 'Loading...'});
-    loader.present()
-    this.backEndService
-        .getSingleItem(itemId)
-        .then(res => {
-            this.navCtrl.push(ItemPage, { item: res });
-            loader.dismiss();
-        })
-        .catch(error => {
-          console.log(error);
-            //this.schdErrorHandler.showSchdError(error);
-        });
-    
+  callBackEndFunction() {
+    if(this.feedType == 'news') {
+      return this.backEndService.getItems();
+    }
+    if(this.feedType == 'emoji') {
+      return this.backEndService.getEmojiFeed(this.feedTitle);
+    }
   }
 
 }

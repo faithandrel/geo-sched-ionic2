@@ -1,0 +1,16 @@
+<ion-item-group>
+    <ion-item-divider color="grey" no-lines>Articles</ion-item-divider>
+    <button ion-item class="blog" *ngFor="let item of itemList" (click)="viewSingleItem(item.id)">
+      <ion-thumbnail item-left>
+        <img src="assets/img/thumbnail-rotla.png">
+      </ion-thumbnail>
+      <h2>{{ item.title }}</h2>
+      <h2>{{ item.content }}</h2>
+      <ion-grid>
+        <ion-row wrap class="blog-details">
+          <ion-col>John Doe</ion-col>
+          <ion-col>3mins ago</ion-col>
+        </ion-row>
+      </ion-grid>
+  </button>
+</ion-item-group>

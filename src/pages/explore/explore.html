@@ -18,7 +18,7 @@
       <ion-row *ngFor="let emojis of emojiArray">
         <ion-col *ngFor="let emoji of emojis">
           <section>
-            <ion-item no-lines>
+            <ion-item no-lines (click)="openFeedForEmoji(emoji)">
               <span>{{ emoji }}</span>
             </ion-item>
           </section>

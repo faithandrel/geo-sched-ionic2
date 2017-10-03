@@ -13,7 +13,6 @@ import { ExplorePage } from '../pages/explore/explore';
 import { DisplayMapPage } from '../pages/display-map/display-map';
 import { ProfilePage } from './../pages/profile/profile';
 import { CategoryPage } from './../pages/category/category';
-import { FeedPage } from './../pages/feed/feed';
 import { InterestsPage } from './../pages/interests/interests';
 import { TabsPage } from '../pages/tabs/tabs';
 
@@ -25,6 +24,7 @@ import { SchdStorage } from '../services/schd-storage';
 
 import { AddArticleComponent } from './../components/add-article/add-article';
 import { ArticleComponent } from './../components/article/article';
+import { FeedComponent } from './../components/feed-section/feed-section';
 
 
 @NgModule({
@@ -38,10 +38,10 @@ import { ArticleComponent } from './../components/article/article';
     CategoryPage,
     ProfilePage,
     TabsPage,
-    FeedPage,
     InterestsPage,
     ArticleComponent,
-    AddArticleComponent
+    AddArticleComponent,
+    FeedComponent
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -59,10 +59,10 @@ import { ArticleComponent } from './../components/article/article';
     CategoryPage,
     ProfilePage,
     TabsPage,
-    FeedPage,
     InterestsPage,
     ArticleComponent,
-    AddArticleComponent
+    AddArticleComponent,
+    FeedComponent
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler},
               {provide: BackEndService, useClass: BackEndService},

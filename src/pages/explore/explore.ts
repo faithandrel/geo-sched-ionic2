@@ -1,8 +1,8 @@
 import { ArticleComponent } from './../../components/article/article';
 import { Component } from '@angular/core';
-import { NavController, ModalController, LoadingController } from 'ionic-angular';
+import { NavController, LoadingController } from 'ionic-angular';
 
-import { ItemPage } from '../item/item';
+import { CategoryPage } from '../category/category';
 
 import { BackEndService } from '../../services/back-end-service';
 import { SchdErrorHandler } from '../../services/schd-error-handler';
@@ -17,7 +17,6 @@ export class ExplorePage {
   emojiArray: any;
 
   constructor(public navCtrl: NavController, 
-              public modalCtrl: ModalController,
               public loadingCtrl: LoadingController,
               private backEndService: BackEndService,
               private schdErrorHandler: SchdErrorHandler) { 
@@ -33,6 +32,11 @@ export class ExplorePage {
         .catch(error => {
             this.schdErrorHandler.showSchdError(error);
         });
+  }
+
+  openFeedForEmoji(emoji) {
+    console.log(emoji);
+    this.navCtrl.push(CategoryPage, { title: emoji, type: 'emoji' });
   }
 
 }
