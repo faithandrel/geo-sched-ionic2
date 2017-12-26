@@ -5,6 +5,8 @@ import { ExplorePage } from './../explore/explore';
 import { CategoryPage } from './../category/category';
 import { Component } from '@angular/core';
 
+import { MojcNotification } from '../../services/mojc-notification';
+
 @Component({
   templateUrl: 'tabs.html'
 })
@@ -15,8 +17,8 @@ export class TabsPage {
   exploreRoot: any = ExplorePage;
   interestsRoot: any = InterestsPage;
 
-  constructor(public modalCtrl: ModalController) {
-
+  constructor(public modalCtrl: ModalController, 
+              public notif: MojcNotification) {
   }
 
   addArticle() {

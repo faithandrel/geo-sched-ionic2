@@ -35,7 +35,6 @@ export class ExplorePage {
   }
 
   openFeedForEmoji(emoji) {
-    console.log(emoji);
     this.navCtrl.push(CategoryPage, { title: emoji, type: 'emoji' });
   }
 

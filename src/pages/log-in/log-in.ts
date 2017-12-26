@@ -10,6 +10,7 @@ import { SchdFacebook } from '../../services/schd-facebook';
 
 import { NavController, AlertController } from 'ionic-angular';
 
+import { Push, PushObject, PushOptions } from '@ionic-native/push';
 
 @Component({
   templateUrl: 'log-in.html'
@@ -22,22 +23,85 @@ export class LogInPage implements OnInit {
   myResponse: any;
   loading: boolean = false;
   myToken: any;
+  pushObject: PushObject;
   
   constructor(private backEndService: BackEndService,
               private schdErrorHandler: SchdErrorHandler,
               private schdLocation: SchdLocation,
               private schdFacebook: SchdFacebook,
               private navCtrl: NavController,
-              public alertCtrl: AlertController) {    
+              public alertCtrl: AlertController,
+              public push: Push) {
+
+    this.loginUser = {
+      name: '',
+      password: '',
+      deviceToken: ''
+    };
+
+    //Get device token
+    const options: PushOptions = {
+      android: {
+        senderID: '658412190684'
+      },
+      ios: {
+        alert: 'true',
+        badge: false,
+        sound: 'true'
+      },
+      windows: {}
+    };
+    this.pushObject = this.push.init(options);
+
+    this.pushObject.on('registration').subscribe((data: any) => {
+      console.log('device token -> ' + data.registrationId);
+      this.loginUser.deviceToken = data.registrationId;
+    });
+
   }
   
-  
+  loginTheUser() {
+    this.navCtrl.setRoot(TabsPage);
+    this.initPushNotification(); 
+  }
+
+  initPushNotification() {
+    this.pushObject.on('notification').subscribe((data: any) => {
+      console.log('message -> ' + data.message);
+      //if user using app and push notification comes
+      if (data.additionalData.foreground) {
+        // if application open, show popup
+        let confirmAlert = this.alertCtrl.create({
+          title: 'New Notification',
+          message: data.message,
+          buttons: [{
+            text: 'Ignore',
+            role: 'cancel'
+          }, {
+            text: 'View',
+            handler: () => {
+              //TODO: Your logic here
+              //this.nav.push(DetailsPage, { message: data.message });
+            }
+          }]
+        });
+        confirmAlert.present();
+      } else {
+        //if user NOT using app and push notification comes
+        //TODO: Your logic on click of push notification directly
+        this.navCtrl.push(TabsPage);
+        console.log('Push notification clicked');
+      }
+    });
+
+    this.pushObject.on('error').subscribe(error => console.error('Error with Push plugin' + error));
+  }
+
   loginWithPassword() {
     this.backEndService
         .loginWithPassword(this.loginUser)
         .then(res => {
-            //console.log(this.backEndService.jwtToken);
-            this.navCtrl.setRoot(TabsPage);
+            this.loginTheUser();
           })
         .catch(error => {
             this.schdErrorHandler.showSchdError(error);
@@ -45,17 +109,16 @@ export class LogInPage implements OnInit {
 
   }
 
-  loginWithFacebook() {
+  loginWithFacebook() {   
      this.schdFacebook.loginWithFacebook()
         .then(res => {  
           if(res.status == 'connected') {
             this.loginUser.facebook = res.authResponse.userID
-          }
+          }          
           return this.backEndService.loginWithFacebook(this.loginUser);
         })          
         .then(res => {  
-            this.navCtrl.setRoot(TabsPage);
-            console.log(res);
+            this.loginTheUser();           
         })
         .catch(error => {
             this.schdErrorHandler.showSchdError(error);
@@ -73,17 +136,9 @@ export class LogInPage implements OnInit {
   ngOnInit() {
     this.loading = true;
 
-    this.loginUser = {
-      name: '',
-      password: ''
-    };
-
-   // this.backEndService.getBackEndToken();
-
     this.backEndService
         .getBackEndToken()
         .then(res => {  
-            //this.myToken = this.jwtHelper.getTokenExpirationDate(this.backEndService.jwtToken);
             this.myResponse = res;
           })          
         .catch(error => {
@@ -92,26 +147,16 @@ export class LogInPage implements OnInit {
         .then(res => {  
             return this.backEndService.getSavedJwt();
         })
-        .then(res => {
-          /* let alert = this.alertCtrl.create({
-               title: 'Hey',
-               subTitle: 'Got',
-               buttons: [{
-                          text: 'OK',
-                          
-                        }]
-             });
-             alert.present();*/
-            this.myToken = this.backEndService.getExpiryDate();
+        .then(res => {      
             if(this.backEndService.isLoggedIn()) {
+              this.initPushNotification(); 
               this.navCtrl.setRoot(TabsPage);
-              //this.loading = false;
               return Promise.resolve();
             } 
             this.loading = false;
             return Promise.resolve();
         });
-        //.then(() => ;
+        
     
     this.schdErrorHandler.checkWeb();
     

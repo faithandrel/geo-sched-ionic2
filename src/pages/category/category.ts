@@ -42,11 +42,15 @@ export class CategoryPage {
   }
 
   refreshPage() {
+    let loader = this.loadingCtrl.create({content: 'Loading...'});
+    loader.present()
     this.callBackEndFunction().then(res => {
       this.items = res;
+      loader.dismiss();
     })
     .catch(error => {
-        this.schdErrorHandler.showSchdError(error);
+      loader.dismiss();
+      this.schdErrorHandler.showSchdError(error);
     });
   }
 
