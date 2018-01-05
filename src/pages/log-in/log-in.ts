@@ -111,10 +111,11 @@ export class LogInPage implements OnInit {
 
   loginWithFacebook() {   
      this.schdFacebook.loginWithFacebook()
-        .then(res => {  
-          if(res.status == 'connected') {
-            this.loginUser.facebook = res.authResponse.userID
-          }          
+        .then(res => { 
+          if(res.status != 'connected') {
+            Promise.reject('Facebook not connected.');
+          } 
+          this.loginUser.facebook = res.authResponse.userID;          
           return this.backEndService.loginWithFacebook(this.loginUser);
         })          
         .then(res => {  

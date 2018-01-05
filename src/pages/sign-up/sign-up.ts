@@ -29,10 +29,11 @@ export class SignUpPage implements OnInit {
   facebookSignUp() {
     this.schdFacebook.loginWithFacebook()
         .then(res => {  
-        	if(res.status == 'connected') {
-        		this.signUpUser.facebook = res.authResponse.userID,
-        		this.signUpUser.fbToken  = res.authResponse.accessToken
+        	if(res.status != 'connected') {
+        	  Promise.reject('Facebook not connected.')
         	}
+          this.signUpUser.facebook = res.authResponse.userID,
+          this.signUpUser.fbToken  = res.authResponse.accessToken
         	this.myResponse = JSON.stringify(this.signUpUser);
         	return this.backEndService.facebookSignUp(this.signUpUser);
         })          
