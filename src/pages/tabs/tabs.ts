@@ -1,4 +1,4 @@
-import { InterestsPage } from './../interests/interests';
+import { NotificationsPage } from './../notifications/notifications';
 import { AddArticleComponent } from './../../components/add-article/add-article';
 import { ModalController } from 'ionic-angular';
 import { ExplorePage } from './../explore/explore';
@@ -15,7 +15,7 @@ export class TabsPage {
   // should be each tab's root Page
   categoryRoot: any = CategoryPage;
   exploreRoot: any = ExplorePage;
-  interestsRoot: any = InterestsPage;
+  notificationsRoot: any = NotificationsPage;
 
   constructor(public modalCtrl: ModalController, 
               public notif: MojcNotification) {

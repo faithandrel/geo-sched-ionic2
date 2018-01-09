@@ -14,7 +14,7 @@ import { ExplorePage } from '../pages/explore/explore';
 import { DisplayMapPage } from '../pages/display-map/display-map';
 import { ProfilePage } from './../pages/profile/profile';
 import { CategoryPage } from './../pages/category/category';
-import { InterestsPage } from './../pages/interests/interests';
+import { NotificationsPage } from './../pages/notifications/notifications';
 import { TabsPage } from '../pages/tabs/tabs';
 
 import { BackEndService } from '../services/back-end-service';
@@ -40,7 +40,7 @@ import { FeedComponent } from './../components/feed-section/feed-section';
     CategoryPage,
     ProfilePage,
     TabsPage,
-    InterestsPage,
+    NotificationsPage,
     ArticleComponent,
     AddArticleComponent,
     FeedComponent
@@ -61,7 +61,7 @@ import { FeedComponent } from './../components/feed-section/feed-section';
     CategoryPage,
     ProfilePage,
     TabsPage,
-    InterestsPage,
+    NotificationsPage,
     ArticleComponent,
     AddArticleComponent,
     FeedComponent

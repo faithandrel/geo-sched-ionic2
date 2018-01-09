@@ -8,7 +8,7 @@ import { SchdStorage } from './schd-storage';
 
 @Injectable()
 export class BackEndService {
-  backEndUrl = 'http://52a765cc.ngrok.io/';  // URL to web api
+  backEndUrl = 'http://8ffbaae0.ngrok.io/';  // URL to web api
   backEndToken: any;
   private signupSession: string;
   theResponse: any;
@@ -201,6 +201,15 @@ export class BackEndService {
   getEmojiFeed(emoji): Promise<any> {
     let body = JSON.stringify({emoji: emoji});
     var req = this.prepareHttpRequest(body, 'emoji', true, RequestMethod.Post);
+    
+    return this.http.request(req)
+          .toPromise()
+          .then(res => res.json())
+          .catch(this.handleError);
+  }
+
+  getNotifications(): Promise<any> {
+    var req = this.prepareHttpRequest('', 'notifications', true, RequestMethod.Get);
     
     return this.http.request(req)
           .toPromise()
