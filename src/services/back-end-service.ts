@@ -8,7 +8,7 @@ import { SchdStorage } from './schd-storage';
 
 @Injectable()
 export class BackEndService {
-  backEndUrl = 'http://8ffbaae0.ngrok.io/';  // URL to web api
+  backEndUrl = 'http://f7ffc345.ngrok.io/';  // URL to web api
   backEndToken: any;
   private signupSession: string;
   theResponse: any;
@@ -208,8 +208,27 @@ export class BackEndService {
           .catch(this.handleError);
   }
 
-  getNotifications(): Promise<any> {
-    var req = this.prepareHttpRequest('', 'notifications', true, RequestMethod.Get);
+  getNewNotifications(): Promise<any> {
+    var req = this.prepareHttpRequest('', 'new-notifications', true, RequestMethod.Get);
+    
+    return this.http.request(req)
+          .toPromise()
+          .then(res => res.json())
+          .catch(this.handleError);
+  }
+
+  getAllNotifications(): Promise<any> {
+    var req = this.prepareHttpRequest('', 'all-notifications', true, RequestMethod.Get);
+    
+    return this.http.request(req)
+          .toPromise()
+          .then(res => res.json())
+          .catch(this.handleError);
+  }
+
+  sendReadNotifications(notificationIds: Array<string>): Promise<any> {
+    let body = JSON.stringify({ids: notificationIds});
+    var req = this.prepareHttpRequest(body, 'notifications', true, RequestMethod.Post);
     
     return this.http.request(req)
           .toPromise()

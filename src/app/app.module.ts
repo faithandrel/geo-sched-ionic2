@@ -23,6 +23,7 @@ import { SchdLocation } from '../services/schd-location';
 import { SchdFacebook } from '../services/schd-facebook';
 import { SchdStorage } from '../services/schd-storage';
 import { MojcNotification } from '../services/mojc-notification';
+import { MojcConfiguration } from '../services/mojc-configuration';
 
 import { AddArticleComponent } from './../components/add-article/add-article';
 import { ArticleComponent } from './../components/article/article';
@@ -75,6 +76,7 @@ import { FeedComponent } from './../components/feed-section/feed-section';
               {provide: Push, useClass: Push},
               {provide: SchdFacebook, useClass: SchdFacebook},
               {provide: SchdStorage, useClass: SchdStorage},
-              {provide: MojcNotification, useClass: MojcNotification}]
+              {provide: MojcNotification, useClass: MojcNotification},
+              {provide: MojcConfiguration, useClass: MojcConfiguration}]
 })
 export class AppModule {}

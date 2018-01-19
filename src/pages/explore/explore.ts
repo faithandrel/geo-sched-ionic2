@@ -14,7 +14,7 @@ import { SchdErrorHandler } from '../../services/schd-error-handler';
 export class ExplorePage {
 
   myTest: any;
-  emojiArray: any;
+  emojiArray: Array<any>;
 
   constructor(public navCtrl: NavController, 
               public loadingCtrl: LoadingController,

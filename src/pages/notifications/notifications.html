@@ -19,16 +19,12 @@
       <p>{{ myResponse }}</p>
       <button ion-button (click)="getNotifications()" >Test</button>
       <ion-item-divider color="grey" no-lines>Latest</ion-item-divider>
-      <ion-item-sliding>
+      <ion-item-sliding *ngFor="let notification of notification.notifications">
         <ion-item class="notifications">
-          <ion-avatar item-left>
-            <img src="assets/img/profiles/avatar-ts-jessie.png">
-          </ion-avatar>
-          <h2>Cher</h2>
           <ion-grid>
             <ion-row wrap class="notifications-details">
-              <ion-col>Liked your post</ion-col>
-              <ion-col>3mins ago</ion-col>
+              <ion-col>{{ notification.text }}</ion-col>
+              <ion-col>{{ notification.updated }}</ion-col>
             </ion-row>
           </ion-grid>
         </ion-item>
