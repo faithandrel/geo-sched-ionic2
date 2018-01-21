@@ -4,9 +4,11 @@ import { BackEndService } from './back-end-service';
 
 @Injectable()
 export class MojcNotification {
-  
-	counter: any = 0;
-	notifications: Array<any> = [];
+  	
+  	counter: number = 0;
+	oldNotifications: Array<any> = [];
+	newNotifications: Array<any> = [];
+	readNotifications: Array<any> = [];
 
 	constructor(private backEndService: BackEndService) {
 	}
@@ -14,9 +16,10 @@ export class MojcNotification {
 	getAllNotifications(): Promise<any> {
 	  	return this.backEndService
 	        .getAllNotifications()
-	        .then(res => {  
-	            this.counter 	  += res.length;
-	            this.notifications = this.notifications.concat(res);
+	        .then(res => {  	
+	        	this.counter 	      = res.new.length;              
+	            this.newNotifications = res.new;
+	            this.oldNotifications = res.old;
 	            return res;
 	         })  
           	.catch(this.handleError);
@@ -25,9 +28,9 @@ export class MojcNotification {
 	getNewNotifications(): Promise<any> {
 	  	return this.backEndService
 	        .getNewNotifications()
-	        .then(res => {  
-	           	this.counter 	  += res.length;
-	            this.notifications = this.notifications.concat(res);
+	        .then(res => {
+	        	this.counter 	      = res.length;  	           	
+	            this.newNotifications = res;
 	            return res;
 	         })  
           	.catch(this.handleError);
@@ -36,18 +39,34 @@ export class MojcNotification {
 	markAsRead(): Promise<any> {
 		var readNotifs = [];
 
-		for(var key in this.notifications) {
-			if(this.notifications[key].read_at == null) {
-				readNotifs.push(this.notifications[key].tag);
+		for(var key in this.newNotifications) {
+			//check that notif not in old
+			var currentNotification = this.newNotifications[key];
+			var found = this.oldNotifications.find(function(notification) {
+			  return notification.tag == currentNotification.tag;
+			}, currentNotification);
+
+			if(found == undefined) {
+				currentNotification.read_at = Date.now();
+				readNotifs.push(currentNotification.tag);
+				this.readNotifications.push(currentNotification);
 			}
 		}
 
 		return this.backEndService
-	        .sendReadNotifications(readNotifs)
-	        .then(res => {  
+	        .sendReadNotifications(readNotifs) 
+	        .then(res => {  	           	
 	            this.counter = 0;
 	         })  
-          	.catch(this.handleError);
+          	.catch(this.handleError);;
+	}
+
+	clearNewNotifications() {
+		for(var i=this.readNotifications.length; i > 0; i--) {
+			this.oldNotifications.unshift(this.readNotifications[(i-1)]);
+		}
+
+		this.readNotifications = [];
 	}
 
 	private handleError(error: any) {

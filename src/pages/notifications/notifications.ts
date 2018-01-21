@@ -17,14 +17,19 @@ export class NotificationsPage {
   			  private schdErrorHandler: SchdErrorHandler) { }
 
 	ionViewDidEnter() {
-	    /*this.notification
+	    this.notification
 	        .markAsRead()
 	        .then(res => {  
 	            this.myResponse = JSON.stringify(res);
 	         })          
 	        .catch(error => {
 	            this.schdErrorHandler.showSchdError(error);
-	        });*/
+	        });
+	}
+	
+
+	ionViewDidLeave() {
+		this.notification.clearNewNotifications();
 	}
 
 	getNotifications() {
@@ -37,4 +42,17 @@ export class NotificationsPage {
 	            this.schdErrorHandler.showSchdError(error);
 	        });
 	}
+
+	refreshPage() {
+    	this.notification.getAllNotifications()
+	        .then(res => { 
+	          return this.notification.markAsRead();
+	        })          
+	        .then(res => {  
+	            this.myResponse = JSON.stringify(res);
+	        })
+	        .catch(error => {
+	            this.schdErrorHandler.showSchdError(error);
+	        });
+  	}
 }

@@ -7,6 +7,7 @@ import { BackEndService } from '../../services/back-end-service';
 import { SchdErrorHandler } from '../../services/schd-error-handler';
 import { SchdLocation } from '../../services/schd-location';
 import { SchdFacebook } from '../../services/schd-facebook';
+import { MojcNotification } from '../../services/mojc-notification';
 import { MojcConfiguration } from '../../services/mojc-configuration';
 
 import { NavController, AlertController } from 'ionic-angular';
@@ -31,6 +32,7 @@ export class LogInPage implements OnInit {
               private schdLocation: SchdLocation,
               private schdFacebook: SchdFacebook,
               private mojcConfig: MojcConfiguration,
+              private mojcNotif: MojcNotification,
               private navCtrl: NavController,
               public alertCtrl: AlertController,
               public push: Push) {
@@ -65,6 +67,7 @@ export class LogInPage implements OnInit {
   loginTheUser() {
     this.navCtrl.setRoot(TabsPage);
     this.initPushNotification(); 
+    this.mojcNotif.getAllNotifications();
     this.mojcConfig.runChecksOnInterval();
   }
 
@@ -126,7 +129,7 @@ export class LogInPage implements OnInit {
         })
         .catch(error => {
             this.schdErrorHandler.showSchdError(error);
-        })
+        });
   }
   
   signUp() {
