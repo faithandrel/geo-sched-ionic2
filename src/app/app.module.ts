@@ -6,6 +6,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { Facebook } from '@ionic-native/facebook';
 import { Geolocation } from '@ionic-native/geolocation';
 import { Push } from '@ionic-native/push';
+import { Badge } from '@ionic-native/badge';
 
 import { LogInPage}  from '../pages/log-in/log-in';
 import { SignUpPage } from '../pages/sign-up/sign-up';
@@ -74,6 +75,7 @@ import { FeedComponent } from './../components/feed-section/feed-section';
               {provide: Facebook, useClass: Facebook},
               {provide: Geolocation, useClass: Geolocation},
               {provide: Push, useClass: Push},
+              {provide: Badge, useClass: Badge},
               {provide: SchdFacebook, useClass: SchdFacebook},
               {provide: SchdStorage, useClass: SchdStorage},
               {provide: MojcNotification, useClass: MojcNotification},
