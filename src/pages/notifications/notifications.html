@@ -24,22 +24,16 @@
       <p>{{ myResponse }}</p>
       <button ion-button (click)="getNotifications()" >Test</button>
       <ion-item-divider color="grey" no-lines>Latest</ion-item-divider>
-      <ion-item-sliding *ngFor="let notification of notification.readNotifications">
-        <ion-item class="notifications">
-          <ion-grid>
-            <ion-row wrap class="notifications-details">
-              <ion-col>{{ notification.text }}</ion-col>
-              <ion-col>{{ notification.updated }}</ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-item>
-        <ion-item-options side="right">
-          <button ion-button color="primary">
-        <ion-icon name="close"></ion-icon>
-        Clear
+      <button ion-item class="notifications" 
+              *ngFor="let notification of notification.readNotifications"
+              (click)="viewSingleItem(notification.item_id)" >
+        <ion-grid>
+          <ion-row wrap class="notifications-details">
+            <ion-col>{{ notification.text }}</ion-col>
+            <ion-col>{{ notification.updated }}</ion-col>
+          </ion-row>
+        </ion-grid>
       </button>
-        </ion-item-options>
-      </ion-item-sliding>
 
       <ion-item-sliding>
         <ion-item class="notifications">
@@ -86,22 +80,17 @@
 
     <ion-item-group>
       <ion-item-divider color="grey" no-lines>Older</ion-item-divider>
-      <ion-item-sliding *ngFor="let notification of notification.oldNotifications">
-        <ion-item class="notifications">
-          <ion-grid>
-            <ion-row wrap class="notifications-details">
-              <ion-col>{{ notification.text }}</ion-col>
-              <ion-col>{{ notification.updated }}</ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-item>
-        <ion-item-options side="right">
-          <button ion-button color="primary">
-        <ion-icon name="close"></ion-icon>
-        Clear
+      <button ion-item class="notifications" 
+              *ngFor="let notification of notification.oldNotifications"
+              (click)="viewSingleItem(notification.item_id)" >
+        <ion-grid>
+          <ion-row wrap class="notifications-details">
+            <ion-col>{{ notification.text }}</ion-col>
+            <ion-col>{{ notification.updated }}</ion-col>
+          </ion-row>
+        </ion-grid>
       </button>
-        </ion-item-options>
-      </ion-item-sliding>
+
 
       <ion-item-sliding>
         <ion-item class="notifications">

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, LoadingController } from 'ionic-angular';
+import { ItemPage } from '../../pages/item/item';
 
+import { BackEndService } from '../../services/back-end-service';
 import { MojcNotification } from '../../services/mojc-notification';
 import { SchdErrorHandler } from '../../services/schd-error-handler';
 
@@ -13,6 +15,8 @@ export class NotificationsPage {
 	myResponse: any;
 
   	constructor(public navCtrl: NavController,
+  				public loadingCtrl: LoadingController,
+  			  private backEndService: BackEndService,
   			  private notification: MojcNotification,
   			  private schdErrorHandler: SchdErrorHandler) { }
 
@@ -55,4 +59,20 @@ export class NotificationsPage {
 	            this.schdErrorHandler.showSchdError(error);
 	        });
   	}
+
+  	//TODO: should be moved to service
+  	viewSingleItem(itemId) {
+	    let loader = this.loadingCtrl.create({content: 'Loading...'});
+	    loader.present()
+	    this.backEndService
+	        .getSingleItem(itemId)
+	        .then(res => {
+	            this.navCtrl.push(ItemPage, { item: res });
+	            loader.dismiss();
+	        })
+	        .catch(error => {
+	          console.log(error);
+	            //this.schdErrorHandler.showSchdError(error);
+	        });
+    }
 }

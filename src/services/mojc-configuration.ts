@@ -7,7 +7,7 @@ import { MojcNotification } from './mojc-notification';
 @Injectable()
 export class MojcConfiguration {
 
-	checkInterval: number = 20000;
+	checkInterval: number = 60000;
 
 	constructor(private notification: MojcNotification) {
 
